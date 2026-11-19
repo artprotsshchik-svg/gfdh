@@ -1,0 +1,6 @@
+{
+  "name": "Mod Optimizer — Forge 1.20.1",
+  "description": "Анализатор совместимости и умный конструктор оптимизирующих модов для Minecraft Forge 1.20.1.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

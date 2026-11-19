@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 2,
+  "updatedAt": "16.11.2026",
+  "sha256": "7cf331c54db3abb6bdf97d953ad32e8fb2fe6801efe740821e0a167ca7176afc",
+  "bytes": 473986,
+  "counts": {
+    "mods": 509,
+    "groups": 21,
+    "presets": 2,
+    "rules": 32,
+    "golden": 27
+  },
+  "bundleFile": "db-bundle.json"
+}
