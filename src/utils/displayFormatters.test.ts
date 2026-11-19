@@ -6,7 +6,9 @@ import {
   formatShortOneLineDescription,
   getModEnvBadge,
   getModLoaderBadge,
+  getPortWarningForMod,
   getRecommendedConfigForMod,
+  isModAvailableInPort,
 } from './displayFormatters.ts';
 import { MODS_DATABASE } from '../data/modsData.ts';
 
@@ -21,9 +23,9 @@ describe('displayFormatters', () => {
     );
   });
 
-  it('derives clean loader badges for Forge, Sinytra, NeoForge, and Fabric', () => {
+  it('derives clean loader badges for Forge, Fabric via Sinytra, NeoForge, and Fabric', () => {
     assert.equal(getModLoaderBadge({ platform: 'Forge 1.20.1' }), 'Forge');
-    assert.equal(getModLoaderBadge({ platform: 'Fabric (через Sinytra Connector)' }), 'Sinytra');
+    assert.equal(getModLoaderBadge({ platform: 'Fabric (через Sinytra Connector)' }), 'Fabric via Sinytra');
     assert.equal(getModLoaderBadge({ platform: 'NeoForge 1.21+' }), 'NeoForge');
     assert.equal(getModLoaderBadge({ platform: 'Fabric (Справка)' }), 'Fabric');
   });
@@ -36,9 +38,34 @@ describe('displayFormatters', () => {
 
     assert.equal(getModEnvBadge(embeddium), 'Клиент');
     assert.equal(getModEnvBadge(nvidium), 'Клиент');
-    assert.equal(getModLoaderBadge(nvidium), 'Sinytra');
+    assert.equal(getModLoaderBadge(nvidium), 'Fabric via Sinytra');
     assert.equal(getModEnvBadge(spark), 'Клиент / Сервер');
     assert.equal(getModEnvBadge(servercore), 'Сервер');
+  });
+
+  it('filters mod availability cleanly between Hybrid (Forge + Fabric) and Forge ports and flags selected mods', () => {
+    const embeddium = MODS_DATABASE.find(m => m.id === 'embeddium')!;
+    const alloyium = MODS_DATABASE.find(m => m.id === 'alloyium')!;
+    const nvidium = MODS_DATABASE.find(m => m.id === 'nvidium')!;
+    const sinytra = MODS_DATABASE.find(m => m.id === 'sinytra-connector')!;
+    const vulkanmod = MODS_DATABASE.find(m => m.id === 'vulkanmod')!;
+
+    assert.equal(isModAvailableInPort(embeddium, 'hybrid'), true);
+    assert.equal(isModAvailableInPort(embeddium, 'forge'), true);
+    assert.equal(isModAvailableInPort(alloyium, 'hybrid'), true);
+    assert.equal(isModAvailableInPort(alloyium, 'forge'), true);
+
+    assert.equal(isModAvailableInPort(nvidium, 'hybrid'), true);
+    assert.equal(isModAvailableInPort(nvidium, 'forge'), false);
+    assert.equal(isModAvailableInPort(sinytra, 'hybrid'), true);
+    assert.equal(isModAvailableInPort(sinytra, 'forge'), false);
+
+    assert.equal(isModAvailableInPort(vulkanmod, 'hybrid'), false);
+    assert.equal(isModAvailableInPort(vulkanmod, 'forge'), false);
+
+    assert.equal(getPortWarningForMod(nvidium, true, 'hybrid'), null);
+    assert.equal(getPortWarningForMod(nvidium, false, 'forge'), null);
+    assert.ok(getPortWarningForMod(nvidium, true, 'forge')?.includes('Sinytra'));
   });
 
   it('returns Nvidium config entry and ensures no Nvidium Forged exists', () => {

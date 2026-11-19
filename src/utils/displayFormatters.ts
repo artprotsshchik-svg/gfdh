@@ -1,11 +1,14 @@
 import type { ModItem } from '../data/modsData.ts';
 import { MOD_RECOMMENDED_CONFIGS, type ModConfigEntry } from '../data/modConfigs.ts';
+import { SINYTRA_BRIDGE_IDS, isUnsupportedOnForge } from './modAnalyzer.ts';
 
 /**
  * UI display formatters:
  * Strips download counts, CF/MR tags, and update dates from user-facing strings
- * and derives clean loader/environment badges without modifying MODS_DATABASE.
+ * and derives clean loader/environment badges & port availability without modifying MODS_DATABASE.
  */
+
+export type PortMode = 'hybrid' | 'forge';
 
 export function cleanStatusLabel(label: string): string {
   if (!label) return '';
@@ -36,11 +39,11 @@ export function formatShortOneLineDescription(description: string, maxLength = 1
   return candidate.slice(0, maxLength - 1).trimEnd() + '…';
 }
 
-export type ModLoaderBadge = 'Forge' | 'Sinytra' | 'NeoForge' | 'Fabric';
+export type ModLoaderBadge = 'Forge' | 'Fabric via Sinytra' | 'NeoForge' | 'Fabric';
 
 export function getModLoaderBadge(mod: Pick<ModItem, 'platform'>): ModLoaderBadge {
   const p = mod.platform || '';
-  if (p.includes('Sinytra')) return 'Sinytra';
+  if (p.includes('Sinytra')) return 'Fabric via Sinytra';
   if (p.includes('NeoForge') && !/\bForge\b/.test(p)) return 'NeoForge';
   if (p.includes('Fabric') && !/\bForge\b/.test(p) && !p.includes('Universal')) return 'Fabric';
   return 'Forge';
@@ -126,4 +129,27 @@ export function getModEnvBadge(
 
 export function getRecommendedConfigForMod(modId: string): ModConfigEntry | null {
   return MOD_RECOMMENDED_CONFIGS.find(entry => entry.modId === modId) ?? null;
+}
+
+export function isModAvailableInPort(mod: ModItem, portMode: PortMode): boolean {
+  if (isUnsupportedOnForge(mod)) return false;
+  const p = mod.platform || '';
+  const isNeoForgeOnly = p.includes('NeoForge') && !/\bForge\b/.test(p);
+  if (isNeoForgeOnly) return false;
+  if (mod.name.includes('1.19.2') || p.includes('1.18.2')) return false;
+
+  const isSinytraRequired = p.includes('Sinytra') || SINYTRA_BRIDGE_IDS.has(mod.id);
+  if (portMode === 'forge' && isSinytraRequired) {
+    return false;
+  }
+
+  return true;
+}
+
+export function getPortWarningForMod(mod: ModItem, isSelected: boolean, portMode: PortMode): string | null {
+  if (!isSelected || isModAvailableInPort(mod, portMode)) return null;
+  if (portMode === 'forge' && (mod.platform.includes('Sinytra') || SINYTRA_BRIDGE_IDS.has(mod.id))) {
+    return `Недоступен в порте «Forge» — требует Sinytra Connector (переключите порт на «Гибрид (Forge + Fabric)» или отключите мод).`;
+  }
+  return `Мод не подходит для выбранного порта (${portMode === 'forge' ? 'Forge' : 'Гибрид (Forge + Fabric)'}).`;
 }

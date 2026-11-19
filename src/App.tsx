@@ -224,7 +224,17 @@ export default function App() {
         if (parsed && !userMutatedRef.current) {
           if (parsed.activeTab) setActiveTabState(parsed.activeTab);
           if (parsed.checkedModIds) setCheckedModIdsState(parsed.checkedModIds);
-          if (parsed.builderPrefs) setBuilderPrefsState(parsed.builderPrefs);
+          if (parsed.builderPrefs) {
+            setBuilderPrefsState({
+              ...parsed.builderPrefs,
+              gpu: 'nvidia',
+              mode: 'singleplayer',
+              goal: 'balanced',
+              useCreate: false,
+              useShaders: false,
+              packScale: 'medium',
+            });
+          }
           if (parsed.builderModIds) setBuilderModIdsState(parsed.builderModIds);
           if (parsed.lastSavedDate) setLastSavedDate(parsed.lastSavedDate);
           if (parsed.dbUpdatedAt && !hotUpdatedAt) setDbUpdatedAt(parsed.dbUpdatedAt);
@@ -396,20 +406,19 @@ export default function App() {
   const navItems: Array<{
     id: PersistedTabKey;
     label: string;
-    count: number;
   }> = [
-    { id: 'assembler', label: 'Подбор', count: builderModIds.length },
-    { id: 'catalog', label: 'Каталог', count: MODS_DATABASE.length },
-    { id: 'presets', label: 'Сборки', count: MOD_PRESETS.length },
-    { id: 'checker', label: 'Чекер', count: checkedModIds.length },
-    { id: 'configs', label: 'Конфиги', count: MOD_RECOMMENDED_CONFIGS.length },
+    { id: 'assembler', label: 'Подбор' },
+    { id: 'catalog', label: 'Каталог' },
+    { id: 'presets', label: 'Сборки' },
+    { id: 'checker', label: 'Чекер' },
+    { id: 'configs', label: 'Конфиги' },
   ];
 
   return (
     <div className="min-h-screen bg-[#121417] text-[#e6e8ea] flex flex-col">
       {/* Top Bar */}
       <header className="sticky top-0 z-30 bg-[#1a1d21] border-b border-[#2a2e33]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 h-12 flex items-center justify-between gap-3">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-12 flex items-center justify-between gap-3">
           <a
             href="#top"
             onClick={e => {
@@ -429,20 +438,13 @@ export default function App() {
                   key={item.id}
                   type="button"
                   onClick={() => setActiveTab(item.id)}
-                  className={`px-3 py-1.5 rounded-[4px] text-[13px] font-medium transition-colors duration-150 flex items-center gap-2 whitespace-nowrap shrink-0 border ${
+                  className={`px-3 py-1.5 rounded-[4px] text-[13px] font-medium transition-colors duration-150 whitespace-nowrap shrink-0 border ${
                     active
                       ? 'bg-[#22262b] text-[#e6e8ea] font-semibold border-[#3ddc84]'
                       : 'bg-transparent text-[#8b9199] hover:bg-[#22262b] hover:text-[#e6e8ea] border-transparent'
                   }`}
                 >
-                  <span>{item.label}</span>
-                  <span
-                    className={`text-[11px] font-mono tabular-nums ${
-                      active ? 'text-[#3ddc84]' : 'text-[#8b9199]'
-                    }`}
-                  >
-                    {item.count}
-                  </span>
+                  {item.label}
                 </button>
               );
             })}
@@ -486,7 +488,7 @@ export default function App() {
 
         {/* Mobile Nav */}
         <nav
-          className="flex md:hidden items-center gap-3 px-4 sm:px-6 border-t border-[#2a2e33] overflow-x-auto no-scrollbar"
+          className="flex md:hidden items-center gap-4 px-4 sm:px-6 border-t border-[#2a2e33] overflow-x-auto no-scrollbar"
           aria-label="Разделы"
         >
           {navItems.map(item => {
@@ -496,16 +498,13 @@ export default function App() {
                 key={item.id}
                 type="button"
                 onClick={() => setActiveTab(item.id)}
-                className={`py-2 border-b-2 text-[11px] sm:text-xs font-medium whitespace-nowrap shrink-0 transition-colors duration-150 flex items-center gap-1 ${
+                className={`py-2 border-b-2 text-xs font-medium whitespace-nowrap shrink-0 transition-colors duration-150 ${
                   active
                     ? 'border-[#3ddc84] text-[#e6e8ea] font-semibold'
                     : 'border-transparent text-[#8b9199] hover:text-[#e6e8ea]'
                 }`}
               >
-                <span>{item.label}</span>
-                <span className={`text-[10px] sm:text-[11px] font-mono tabular-nums ${active ? 'text-[#3ddc84]' : 'text-[#8b9199]'}`}>
-                  {item.count}
-                </span>
+                {item.label}
               </button>
             );
           })}
@@ -513,7 +512,7 @@ export default function App() {
       </header>
 
       {/* Main Content Viewport */}
-      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 py-4">
+      <main className="flex-1 max-w-[1280px] w-full mx-auto px-4 sm:px-6 py-4">
         {activeTab === 'assembler' && (
           <AssemblyBuilderTab
             selectedIds={builderModIds}
