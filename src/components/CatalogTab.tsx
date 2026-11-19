@@ -7,6 +7,9 @@ import {
   cleanModDescription,
   cleanStatusLabel,
   formatShortOneLineDescription,
+  getModEnvBadge,
+  getModLoaderBadge,
+  getRecommendedConfigForMod,
 } from '../utils/displayFormatters.ts';
 import {
   evaluateModImpactInPack,
@@ -24,6 +27,7 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
+  Copy,
   ExternalLink,
   Eye,
   EyeOff,
@@ -44,8 +48,8 @@ interface CatalogTabProps {
   onOpenDetail: (mod: ModItem) => void;
 }
 
-const COMPACT_ROW_HEIGHT = 76;
-const EXPANDED_ROW_HEIGHT = 136;
+const COMPACT_ROW_HEIGHT = 74;
+const EXPANDED_ROW_HEIGHT = 176;
 const VIEWPORT_HEIGHT = 600;
 const OVERSCAN = 6;
 
@@ -53,15 +57,12 @@ export function getHealthBadge(mod: ModItem) {
   const tier = getBaseHealthTier(mod);
   const text = cleanStatusLabel(mod.statusLabel);
   if (tier === 'red') {
-    return { tier, textCls: 'text-[#cf6d6d]', text };
+    return { tier, textCls: 'text-[#e55353]', text };
   }
-  if (tier === 'green') {
-    return { tier, textCls: 'text-[#6abf7b]', text };
+  if (tier === 'green' || tier === 'lime') {
+    return { tier, textCls: 'text-[#3ddc84]', text };
   }
-  if (tier === 'lime') {
-    return { tier, textCls: 'text-[#9ab86a]', text };
-  }
-  return { tier, textCls: 'text-[#c99b52]', text };
+  return { tier, textCls: 'text-[#e5a93c]', text };
 }
 
 export function CatalogTab({
@@ -79,6 +80,7 @@ export function CatalogTab({
   const [hideUselessCovered, setHideUselessCovered] = useState(true);
   const [onlyCompatibleInCatalog, setOnlyCompatibleInCatalog] = useState(false);
   const [expandedDescIds, setExpandedDescIds] = useState<Record<string, boolean>>({});
+  const [copiedConfigId, setCopiedConfigId] = useState<string | null>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const [containerHeight, setContainerHeight] = useState(VIEWPORT_HEIGHT);
 
@@ -124,6 +126,7 @@ export function CatalogTab({
         const matches =
           mod.name.toLowerCase().includes(q) ||
           mod.description.toLowerCase().includes(q) ||
+          mod.id.toLowerCase().includes(q) ||
           (mod.bestAlternative && mod.bestAlternative.toLowerCase().includes(q)) ||
           mod.category.toLowerCase().includes(q) ||
           mod.platform.toLowerCase().includes(q) ||
@@ -142,7 +145,6 @@ export function CatalogTab({
     });
   }, [searchQuery, selectedCategory, healthFilter, onlyLeaders, hideUselessCovered, onlyCompatibleInCatalog, builderSet, builderPrefs]);
 
-  // Reset scroll when filters change
   useEffect(() => {
     if (scrollerRef.current) {
       scrollerRef.current.scrollTop = 0;
@@ -150,7 +152,6 @@ export function CatalogTab({
     setScrollTop(0);
   }, [searchQuery, selectedCategory, healthFilter, onlyLeaders, hideUselessCovered, onlyCompatibleInCatalog]);
 
-  // Track virtual container height
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
@@ -230,18 +231,18 @@ export function CatalogTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[6px] p-4 space-y-3">
+      <div className="bg-[#1a1d21] border border-[#2a2e33] rounded-[6px] p-3.5 space-y-3">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-2.5">
           <div className="md:col-span-6 relative">
-            <Search className="w-4 h-4 text-[#8f8f8f] absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
+            <Search className="w-3.5 h-3.5 text-[#8b9199] absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
             <input
               type="text"
               data-search-input="true"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Поиск по названию, описанию или аналогу... (клавиша /)"
+              placeholder="Поиск по названию, описанию или id… (/)"
               aria-label="Поиск модов в каталоге"
-              className="w-full pl-9 pr-3 py-2 bg-[#141414] border border-[#2a2a2a] rounded-[6px] text-xs text-[#e6e6e6] placeholder-[#8f8f8f] focus:border-[#4caf6a] transition-colors"
+              className="w-full pl-9 pr-3 py-1.5 bg-[#121417] border border-[#2a2e33] rounded-[4px] text-xs text-[#e6e8ea] placeholder-[#8b9199] focus:border-[#3ddc84] transition-colors duration-150"
             />
           </div>
 
@@ -250,7 +251,7 @@ export function CatalogTab({
               aria-label="Категория модов"
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2 bg-[#141414] border border-[#2a2a2a] rounded-[6px] text-xs text-[#e6e6e6] focus:border-[#4caf6a] transition-colors"
+              className="w-full px-3 py-1.5 bg-[#121417] border border-[#2a2e33] rounded-[4px] text-xs text-[#e6e8ea] focus:border-[#3ddc84] transition-colors duration-150"
             >
               {categories.map(c => (
                 <option key={c} value={c}>
@@ -265,7 +266,7 @@ export function CatalogTab({
               aria-label="Статус модов"
               value={healthFilter}
               onChange={e => setHealthFilter(e.target.value as HealthFilter)}
-              className="w-full px-3 py-2 bg-[#141414] border border-[#2a2a2a] rounded-[6px] text-xs text-[#e6e6e6] focus:border-[#4caf6a] transition-colors"
+              className="w-full px-3 py-1.5 bg-[#121417] border border-[#2a2e33] rounded-[4px] text-xs text-[#e6e8ea] focus:border-[#3ddc84] transition-colors duration-150"
             >
               <option value="all">Любой статус</option>
               <option value="green">Стабильно</option>
@@ -276,15 +277,15 @@ export function CatalogTab({
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#2a2a2a]">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#2a2e33]">
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={() => setOnlyLeaders(v => !v)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-xs font-medium border transition-colors whitespace-nowrap ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] text-xs font-medium border transition-colors duration-150 whitespace-nowrap ${
                 onlyLeaders
-                  ? 'bg-[#242424] border-[#4caf6a] text-[#e6e6e6]'
-                  : 'bg-[#141414] border-[#2a2a2a] text-[#8f8f8f] hover:text-[#e6e6e6]'
+                  ? 'bg-[#22262b] border-[#3ddc84] text-[#e6e8ea]'
+                  : 'bg-[#121417] border-[#2a2e33] text-[#8b9199] hover:text-[#e6e8ea] hover:bg-[#22262b]'
               }`}
             >
               Только лидеры групп
@@ -293,55 +294,49 @@ export function CatalogTab({
             <button
               type="button"
               onClick={() => setHideUselessCovered(v => !v)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-xs font-medium border transition-colors whitespace-nowrap ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] text-xs font-medium border transition-colors duration-150 whitespace-nowrap ${
                 hideUselessCovered
-                  ? 'bg-[#242424] border-[#4caf6a] text-[#e6e6e6]'
-                  : 'bg-[#141414] border-[#2a2a2a] text-[#8f8f8f] hover:text-[#e6e6e6]'
+                  ? 'bg-[#22262b] border-[#3ddc84] text-[#e6e8ea]'
+                  : 'bg-[#121417] border-[#2a2e33] text-[#8b9199] hover:text-[#e6e8ea] hover:bg-[#22262b]'
               }`}
-              title="Скрывать плацебо, нерабочие на Forge, встроенные и полностью перекрытые моды"
+              title="Скрывать плацебо, нерабочие на Forge, встроенные и перекрытые моды"
             >
-              {hideUselessCovered ? <EyeOff className="w-3.5 h-3.5 text-[#4caf6a]" aria-hidden="true" /> : <Eye className="w-3.5 h-3.5" aria-hidden="true" />}
-              Скрыть лишние и перекрытые
+              {hideUselessCovered ? <EyeOff className="w-3.5 h-3.5 text-[#3ddc84]" aria-hidden="true" /> : <Eye className="w-3.5 h-3.5" aria-hidden="true" />}
+              Скрыть лишние
             </button>
 
             <button
               type="button"
               onClick={() => setOnlyCompatibleInCatalog(v => !v)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-xs font-medium border transition-colors whitespace-nowrap ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] text-xs font-medium border transition-colors duration-150 whitespace-nowrap ${
                 onlyCompatibleInCatalog
-                  ? 'bg-[#242424] border-[#4caf6a] text-[#e6e6e6]'
-                  : 'bg-[#141414] border-[#2a2a2a] text-[#8f8f8f] hover:text-[#e6e6e6]'
+                  ? 'bg-[#22262b] border-[#3ddc84] text-[#e6e8ea]'
+                  : 'bg-[#121417] border-[#2a2e33] text-[#8b9199] hover:text-[#e6e8ea] hover:bg-[#22262b]'
               }`}
-              title="Показывать только моды, совместимые с текущей активной сборкой"
             >
-              {onlyCompatibleInCatalog ? <EyeOff className="w-3.5 h-3.5 text-[#4caf6a]" aria-hidden="true" /> : <Eye className="w-3.5 h-3.5" aria-hidden="true" />}
+              {onlyCompatibleInCatalog ? <EyeOff className="w-3.5 h-3.5 text-[#3ddc84]" aria-hidden="true" /> : <Eye className="w-3.5 h-3.5" aria-hidden="true" />}
               Совм. со сборкой
             </button>
           </div>
 
-          <div className="flex items-center gap-3 text-xs text-[#8f8f8f] tabular-nums">
-            <span>
-              Показано: <strong className="text-[#e6e6e6] font-mono">{filteredMods.length}</strong>
-            </span>
-            <span className="hidden sm:inline text-[11px] text-[#8f8f8f]">
-              ↑/↓ выбор · Пробел в сборку
-            </span>
-          </div>
+          <span className="text-xs text-[#8b9199] font-mono tabular-nums">
+            {filteredMods.length} модов
+          </span>
         </div>
       </div>
 
       {filteredMods.length === 0 ? (
-        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[6px] p-10 text-center space-y-3">
-          <p className="text-sm font-medium text-[#e6e6e6]">
+        <div className="bg-[#1a1d21] border border-[#2a2e33] rounded-[6px] p-10 text-center space-y-3">
+          <p className="text-sm font-medium text-[#e6e8ea]">
             По текущим фильтрам моды не найдены
           </p>
-          <p className="text-xs text-[#8f8f8f]">
+          <p className="text-xs text-[#8b9199]">
             Попробуйте ослабить статус, выключить фильтр лидеров или очистить поисковую строку.
           </p>
           <button
             type="button"
             onClick={resetCatalogFilters}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] bg-[#4caf6a] hover:bg-[#439f5e] text-[#121212] text-xs font-semibold transition-colors whitespace-nowrap"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] bg-[#3ddc84] hover:bg-[#34c776] text-[#0f1411] text-xs font-semibold transition-colors duration-150 whitespace-nowrap"
           >
             <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
             Сбросить фильтры
@@ -353,7 +348,7 @@ export function CatalogTab({
           onScroll={e => setScrollTop(e.currentTarget.scrollTop)}
           data-virtual-total={filteredMods.length}
           data-virtual-rendered={visibleSlice.length}
-          className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[6px] h-[68vh] min-h-[420px] overflow-y-auto relative"
+          className="bg-[#1a1d21] border border-[#2a2e33] rounded-[6px] h-[68vh] min-h-[420px] overflow-y-auto relative"
         >
           <div style={{ height: `${totalHeight}px`, position: 'relative' }}>
             {visibleSlice.map(({ mod, top }) => {
@@ -362,20 +357,22 @@ export function CatalogTab({
               const isInBuilder = builderSet.has(mod.id);
               const restriction = getModRestrictionBadge(mod, builderSet, builderPrefs);
               const catImpact = evaluateModImpactInPack(mod, builderSet, undefined, builderPrefs);
-              const rp = catImpact.resourceProfile;
               const relPctStr =
                 catImpact.relativeImpactPct > 0
                   ? `+${catImpact.relativeImpactPct}%`
                   : `${catImpact.relativeImpactPct}%`;
               const isExpanded = Boolean(expandedDescIds[mod.id]);
               const cacheKey = `${mod.id}:${isExpanded ? '1' : '0'}`;
+              const loader = getModLoaderBadge(mod);
+              const env = getModEnvBadge(mod);
+              const cfg = getRecommendedConfigForMod(mod.id);
 
               const rowTint =
                 badge.tier === 'red' || restriction?.tone === 'red'
-                  ? 'bg-[#cf6d6d]/[0.04] hover:bg-[#cf6d6d]/[0.07]'
+                  ? 'bg-[#e55353]/[0.04] hover:bg-[#22262b]'
                   : badge.tier === 'yellow' || restriction?.tone === 'amber'
-                    ? 'bg-[#c99b52]/[0.03] hover:bg-[#c99b52]/[0.06]'
-                    : 'hover:bg-[#222222]';
+                    ? 'bg-[#e5a93c]/[0.03] hover:bg-[#22262b]'
+                    : 'hover:bg-[#22262b]';
 
               return (
                 <div
@@ -386,42 +383,42 @@ export function CatalogTab({
                   data-mod-id={mod.id}
                   data-mod-context="builder"
                   tabIndex={0}
-                  className={`px-4 py-2.5 border-b border-[#2a2a2a] flex flex-col sm:flex-row sm:items-start justify-between gap-2.5 transition-colors focus:bg-[#242424] ${rowTint}`}
+                  className={`px-4 py-2.5 border-b border-[#2a2e33] flex flex-col sm:flex-row sm:items-start justify-between gap-2.5 transition-colors duration-150 focus:bg-[#22262b] ${rowTint}`}
                 >
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs">
                       <button
                         type="button"
                         onClick={() => onOpenDetail(mod)}
-                        className="text-sm font-semibold text-[#e6e6e6] hover:text-[#4caf6a] text-left"
+                        className="text-sm font-semibold text-[#e6e8ea] hover:text-[#3ddc84] text-left transition-colors duration-150"
                       >
                         {mod.name}
                       </button>
+                      <span className="px-1.5 py-0.5 rounded-[4px] border border-[#2a2e33] bg-[#121417] text-[10px] font-mono text-[#8b9199]">
+                        {loader}
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded-[4px] border border-[#2a2e33] bg-[#121417] text-[10px] text-[#8b9199]">
+                        {env}
+                      </span>
                       <StatusBadge tier={badge.tier} label={badge.text} className="text-[11px]" />
                       <span
                         className={`font-mono font-semibold text-[11px] tabular-nums ${
                           catImpact.relativeImpactPct > 0
-                            ? 'text-[#6abf7b]'
+                            ? 'text-[#3ddc84]'
                             : catImpact.relativeImpactPct < 0
-                              ? 'text-[#cf6d6d]'
-                              : 'text-[#8f8f8f]'
+                              ? 'text-[#e55353]'
+                              : 'text-[#8b9199]'
                         }`}
                       >
                         {relPctStr}
                       </span>
-                      <span className="text-[11px] text-[#8f8f8f]">{mod.platform}</span>
                       {restriction && (restriction.tone === 'red' || restriction.tone === 'amber') && (
                         <span
                           className={`text-[11px] font-medium ${
-                            restriction.tone === 'red' ? 'text-[#cf6d6d]' : 'text-[#c99b52]'
+                            restriction.tone === 'red' ? 'text-[#e55353]' : 'text-[#e5a93c]'
                           }`}
                         >
                           · {restriction.text}
-                        </span>
-                      )}
-                      {rp.hasTradeoff && (
-                        <span className="text-[11px] text-[#c99b52]" title={rp.tradeoffNote}>
-                          · {rp.shortTag}
                         </span>
                       )}
                     </div>
@@ -430,7 +427,7 @@ export function CatalogTab({
                       type="button"
                       onClick={() => toggleExpandDesc(mod.id)}
                       aria-expanded={isExpanded}
-                      className="mt-1 w-full text-left flex items-start gap-1.5 text-xs text-[#8f8f8f] hover:text-[#e6e6e6] transition-colors"
+                      className="mt-1 w-full text-left flex items-start gap-1.5 text-xs text-[#8b9199] hover:text-[#e6e8ea] transition-colors duration-150"
                     >
                       <span className={isExpanded ? 'whitespace-normal leading-relaxed' : 'truncate flex-1'}>
                         {isExpanded
@@ -438,42 +435,65 @@ export function CatalogTab({
                           : formatShortOneLineDescription(mod.description)}
                       </span>
                       {isExpanded ? (
-                        <ChevronUp className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#4caf6a]" aria-hidden="true" />
+                        <ChevronUp className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#3ddc84]" aria-hidden="true" />
                       ) : (
-                        <ChevronDown className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#8f8f8f]" aria-hidden="true" />
+                        <ChevronDown className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#8b9199]" aria-hidden="true" />
                       )}
                     </button>
+
+                    {isExpanded && cfg && (
+                      <div className="mt-2 rounded-[4px] bg-[#121417] border border-[#2a2e33] overflow-hidden">
+                        <div className="px-2.5 py-1 bg-[#1a1d21] border-b border-[#2a2e33] flex items-center justify-between">
+                          <span className="font-mono text-[11px] text-[#8b9199]">
+                            {mod.id === 'nvidium' ? 'config/nvidium.json' : cfg.filePath}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(cfg.content);
+                              setCopiedConfigId(mod.id);
+                              setTimeout(() => setCopiedConfigId(prev => (prev === mod.id ? null : prev)), 1800);
+                            }}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[11px] text-[#e6e8ea] transition-colors duration-150"
+                          >
+                            {copiedConfigId === mod.id ? <Check className="w-3 h-3 text-[#3ddc84]" /> : <Copy className="w-3 h-3" />}
+                            <span>{copiedConfigId === mod.id ? 'Скопировано' : 'Копировать'}</span>
+                          </button>
+                        </div>
+                        <pre className="p-2 font-mono text-xs text-[#e6e8ea] overflow-x-auto select-all">{cfg.content}</pre>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-1.5 shrink-0 pt-0.5">
                     <button
                       type="button"
                       onClick={() => onToggleBuilderMod(mod.id)}
-                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-[4px] text-[11px] font-medium border transition-colors whitespace-nowrap shrink-0 ${
+                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-[4px] text-[11px] font-medium border transition-colors duration-150 whitespace-nowrap shrink-0 ${
                         isInBuilder
-                          ? 'bg-[#4caf6a]/15 border-[#4caf6a] text-[#e6e6e6]'
-                          : 'bg-[#141414] border-[#2a2a2a] text-[#8f8f8f] hover:text-[#e6e6e6] hover:bg-[#222222]'
+                          ? 'bg-[#3ddc84]/15 border-[#3ddc84] text-[#e6e8ea]'
+                          : 'bg-[#121417] border-[#2a2e33] text-[#8b9199] hover:text-[#e6e8ea] hover:bg-[#22262b]'
                       }`}
                     >
-                      {isInBuilder ? <Check className="w-3 h-3 text-[#4caf6a]" aria-hidden="true" /> : <Plus className="w-3 h-3" aria-hidden="true" />}
-                      {isInBuilder ? 'В сборке' : 'В сборку'}
+                      {isInBuilder ? <Check className="w-3 h-3 text-[#3ddc84]" aria-hidden="true" /> : <Plus className="w-3 h-3" aria-hidden="true" />}
+                      {isInBuilder ? 'В подборе' : 'В подбор'}
                     </button>
                     <button
                       type="button"
                       onClick={() => toggleCheckerMod(mod.id)}
-                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-[4px] text-[11px] font-medium border transition-colors whitespace-nowrap shrink-0 ${
+                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-[4px] text-[11px] font-medium border transition-colors duration-150 whitespace-nowrap shrink-0 ${
                         isInChecker
-                          ? 'bg-[#4caf6a]/15 border-[#4caf6a] text-[#e6e6e6]'
-                          : 'bg-[#141414] border-[#2a2a2a] text-[#8f8f8f] hover:text-[#e6e6e6] hover:bg-[#222222]'
+                          ? 'bg-[#3ddc84]/15 border-[#3ddc84] text-[#e6e8ea]'
+                          : 'bg-[#121417] border-[#2a2e33] text-[#8b9199] hover:text-[#e6e8ea] hover:bg-[#22262b]'
                       }`}
                     >
-                      {isInChecker ? <Check className="w-3 h-3 text-[#4caf6a]" aria-hidden="true" /> : <Plus className="w-3 h-3" aria-hidden="true" />}
+                      {isInChecker ? <Check className="w-3 h-3 text-[#3ddc84]" aria-hidden="true" /> : <Plus className="w-3 h-3" aria-hidden="true" />}
                       Чекер
                     </button>
                     <button
                       type="button"
                       onClick={() => onOpenDetail(mod)}
-                      className="p-1.5 rounded-[4px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-[#8f8f8f] hover:text-[#e6e6e6] transition-colors shrink-0"
+                      className="p-1.5 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[#8b9199] hover:text-[#e6e8ea] transition-colors duration-150 shrink-0"
                       title="Подробнее о моде"
                       aria-label={`Подробнее о ${mod.name}`}
                     >
@@ -483,7 +503,7 @@ export function CatalogTab({
                       href={mod.curseforgeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded-[4px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-[#8f8f8f] hover:text-[#e6e6e6] text-[11px] font-mono transition-colors whitespace-nowrap shrink-0"
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[#8b9199] hover:text-[#e6e8ea] text-[11px] font-mono transition-colors duration-150 whitespace-nowrap shrink-0"
                       title="CurseForge"
                     >
                       CF

@@ -76,30 +76,30 @@ export function DubiousModsModal({
 
   const riskToneCls =
     artifactRisk.level === 'critical'
-      ? 'text-[#cf6d6d]'
+      ? 'text-[#e55353]'
       : artifactRisk.level === 'high' || artifactRisk.level === 'moderate'
-        ? 'text-[#c99b52]'
-        : 'text-[#6abf7b]';
+        ? 'text-[#e5a93c]'
+        : 'text-[#3ddc84]';
 
   const severityMeta = (sev: DubiousModEntry['severity']) => {
     if (sev === 'high') {
       return {
         label: 'Критический',
-        textCls: 'text-[#cf6d6d]',
-        rowCls: 'bg-[#cf6d6d]/[0.05] border-[#cf6d6d]/35',
+        textCls: 'text-[#e55353]',
+        rowCls: 'bg-[#e55353]/[0.05] border-[#e55353]/35',
       };
     }
     if (sev === 'medium') {
       return {
         label: 'Сомнительный',
-        textCls: 'text-[#c99b52]',
-        rowCls: 'bg-[#c99b52]/[0.04] border-[#c99b52]/35',
+        textCls: 'text-[#e5a93c]',
+        rowCls: 'bg-[#e5a93c]/[0.04] border-[#e5a93c]/35',
       };
     }
     return {
       label: 'Нюанс',
-      textCls: 'text-[#8f8f8f]',
-      rowCls: 'bg-[#141414] border-[#2a2a2a]',
+      textCls: 'text-[#8b9199]',
+      rowCls: 'bg-[#121417] border-[#2a2e33]',
     };
   };
 
@@ -112,22 +112,22 @@ export function DubiousModsModal({
       aria-label="Сомнительные моды в сборке"
     >
       <div
-        className="w-full max-w-2xl bg-[#1a1a1a] border border-[#2a2a2a] rounded-[6px] overflow-hidden flex flex-col max-h-[85vh]"
+        className="w-full max-w-2xl bg-[#1a1d21] border border-[#2a2e33] rounded-[6px] overflow-hidden flex flex-col max-h-[85vh]"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-5 py-4 border-b border-[#2a2a2a] flex items-start justify-between gap-4 bg-[#141414]">
+        <div className="px-5 py-4 border-b border-[#2a2e33] flex items-start justify-between gap-4 bg-[#121417]">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <h2 className="text-base font-semibold text-[#e6e6e6] flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-[#c99b52] shrink-0" />
+              <h2 className="text-base font-semibold text-[#e6e8ea] flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-[#e5a93c] shrink-0" />
                 Сомнительные моды ({counts.total})
               </h2>
-              <span className="text-xs font-mono tabular-nums text-[#8f8f8f]">
+              <span className="text-xs font-mono tabular-nums text-[#8b9199]">
                 из {totalModsCount} в сборке
               </span>
             </div>
-            <p className="text-xs text-[#8f8f8f] mt-1 tabular-nums">
+            <p className="text-xs text-[#8b9199] mt-1 tabular-nums">
               Шанс артефактов:{' '}
               <strong className={`font-mono ${riskToneCls}`}>
                 {artifactRisk.chancePct}% · {artifactRisk.label}
@@ -138,7 +138,7 @@ export function DubiousModsModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-[4px] text-[#8f8f8f] hover:text-[#e6e6e6] hover:bg-[#222222] transition-colors shrink-0"
+            className="p-1.5 rounded-[4px] text-[#8b9199] hover:text-[#e6e8ea] hover:bg-[#22262b] transition-colors duration-150 shrink-0"
             aria-label="Закрыть окно сомнительных модов"
           >
             <X className="w-4 h-4" />
@@ -147,7 +147,7 @@ export function DubiousModsModal({
 
         {/* Filter & Bulk Actions Bar */}
         {counts.total > 0 && (
-          <div className="px-5 py-2.5 border-b border-[#2a2a2a] flex flex-wrap items-center justify-between gap-2 bg-[#141414]">
+          <div className="px-5 py-2.5 border-b border-[#2a2e33] flex flex-wrap items-center justify-between gap-2 bg-[#121417]">
             <div className="flex flex-wrap items-center gap-1 text-xs">
               {[
                 { k: 'all' as const, label: `Все (${counts.total})` },
@@ -161,10 +161,10 @@ export function DubiousModsModal({
                     key={tab.k}
                     type="button"
                     onClick={() => setFilter(tab.k)}
-                    className={`px-2.5 py-1 rounded-[4px] font-medium transition-colors whitespace-nowrap tabular-nums ${
+                    className={`px-2.5 py-1 rounded-[4px] font-medium transition-colors duration-150 whitespace-nowrap tabular-nums ${
                       filter === tab.k
-                        ? 'bg-[#242424] text-[#4caf6a] font-semibold'
-                        : 'text-[#8f8f8f] hover:text-[#e6e6e6]'
+                        ? 'bg-[#22262b] text-[#3ddc84] font-semibold'
+                        : 'text-[#8b9199] hover:text-[#e6e8ea]'
                     }`}
                   >
                     {tab.label}
@@ -177,7 +177,7 @@ export function DubiousModsModal({
                 <button
                   type="button"
                   onClick={() => onRemoveAllRisky(removableRiskyIds)}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-[#1a1a1a] hover:bg-[#222222] border border-[#cf6d6d]/40 text-[#cf6d6d] text-xs font-medium transition-colors whitespace-nowrap tabular-nums"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-[#1a1d21] hover:bg-[#22262b] border border-[#e55353]/40 text-[#e55353] text-xs font-medium transition-colors duration-150 whitespace-nowrap tabular-nums"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   Убрать рискованные ({removableRiskyIds.length})
@@ -187,7 +187,7 @@ export function DubiousModsModal({
                 <button
                   type="button"
                   onClick={onAutoFix}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-[#4caf6a] hover:bg-[#439f5e] text-[#121212] text-xs font-semibold transition-colors whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-[#3ddc84] hover:bg-[#34c776] text-[#121417] text-xs font-semibold transition-colors duration-150 whitespace-nowrap"
                 >
                   Исправить сборку
                 </button>
@@ -200,14 +200,14 @@ export function DubiousModsModal({
         <div className="flex-1 overflow-y-auto p-5 space-y-2.5">
           {counts.total === 0 ? (
             <div className="py-10 text-center space-y-2">
-              <CheckCircle2 className="w-7 h-7 text-[#6abf7b] mx-auto" />
-              <div className="text-sm font-semibold text-[#e6e6e6]">Сомнительных модов нет</div>
-              <p className="text-xs text-[#8f8f8f] max-w-md mx-auto">
+              <CheckCircle2 className="w-7 h-7 text-[#3ddc84] mx-auto" />
+              <div className="text-sm font-semibold text-[#e6e8ea]">Сомнительных модов нет</div>
+              <p className="text-xs text-[#8b9199] max-w-md mx-auto">
                 Выбранные моды совместимы и не содержат лишних дублей, конфликтов или устаревших портов.
               </p>
             </div>
           ) : visibleEntries.length === 0 ? (
-            <div className="py-8 text-center text-xs text-[#8f8f8f]">
+            <div className="py-8 text-center text-xs text-[#8b9199]">
               В выбранном фильтре модов нет.
             </div>
           ) : (
@@ -221,21 +221,21 @@ export function DubiousModsModal({
                   <div className="min-w-0 flex-1 space-y-1">
                     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs">
                       <span className={`font-semibold ${meta.textCls}`}>{meta.label}</span>
-                      <span className="text-[#8f8f8f]" aria-hidden="true">·</span>
+                      <span className="text-[#8b9199]" aria-hidden="true">·</span>
                       <button
                         type="button"
                         onClick={() => onInspectMod(entry.mod)}
-                        className="text-sm font-semibold text-[#e6e6e6] hover:text-[#4caf6a] text-left transition-colors"
+                        className="text-sm font-semibold text-[#e6e8ea] hover:text-[#3ddc84] text-left transition-colors duration-150"
                       >
                         {entry.mod.name}
                       </button>
                       {entry.artifactContributionPct > 0 && (
-                        <span className="text-[11px] font-mono text-[#c99b52] tabular-nums">
+                        <span className="text-[11px] font-mono text-[#e5a93c] tabular-nums">
                           +{entry.artifactContributionPct}% к артефактам
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-[#8f8f8f] leading-relaxed">{entry.reason}</p>
+                    <p className="text-xs text-[#8b9199] leading-relaxed">{entry.reason}</p>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-1.5 shrink-0">
@@ -243,7 +243,7 @@ export function DubiousModsModal({
                       <button
                         type="button"
                         onClick={() => onReplaceMod(entry.modId, entry.replacementId!)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-[4px] bg-[#4caf6a] hover:bg-[#439f5e] text-[#121212] text-[11px] font-semibold transition-colors whitespace-nowrap"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-[4px] bg-[#3ddc84] hover:bg-[#34c776] text-[#121417] text-[11px] font-semibold transition-colors duration-150 whitespace-nowrap"
                       >
                         <ArrowRightLeft className="w-3 h-3" />
                         Заменить на {entry.replacementName}
@@ -253,7 +253,7 @@ export function DubiousModsModal({
                       <button
                         type="button"
                         onClick={() => onRemoveMod(entry.modId)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-[4px] bg-[#1a1a1a] hover:bg-[#222222] border border-[#2a2a2a] hover:border-[#cf6d6d]/50 text-[#e6e6e6] hover:text-[#cf6d6d] text-[11px] font-medium transition-colors whitespace-nowrap"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-[4px] bg-[#1a1d21] hover:bg-[#22262b] border border-[#2a2e33] hover:border-[#e55353]/50 text-[#e6e8ea] hover:text-[#e55353] text-[11px] font-medium transition-colors duration-150 whitespace-nowrap"
                       >
                         <Trash2 className="w-3 h-3" />
                         Убрать

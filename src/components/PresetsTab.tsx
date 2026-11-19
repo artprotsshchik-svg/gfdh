@@ -65,18 +65,6 @@ export function PresetsTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[6px] px-4 py-3 flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <h2 className="text-sm font-semibold text-[#e6e6e6] tracking-tight">
-            Основные сборки ({MOD_PRESETS.length})
-          </h2>
-          <p className="text-xs text-[#8f8f8f] mt-0.5">
-            Две проверенные конфигурации для Forge 1.20.1: Nvidium + Emberbium и Alloyium + Embeddium.
-          </p>
-        </div>
-      </div>
-
-      {/* Side-by-side comparison matrix */}
       {MOD_PRESETS.length === 2 && (() => {
         const [p1, p2] = MOD_PRESETS;
         const s1 = summarizeAssemblyImpact(p1.modIds);
@@ -111,21 +99,21 @@ export function PresetsTab({
           },
         ];
         return (
-          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[6px] overflow-x-auto">
+          <div className="bg-[#1a1d21] border border-[#2a2e33] rounded-[6px] overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-[#2a2a2a] bg-[#141414] text-[#8f8f8f]">
+                <tr className="border-b border-[#2a2e33] bg-[#121417] text-[#8b9199]">
                   <th className="py-2 px-4 font-semibold">Критерий</th>
-                  <th className="py-2 px-4 font-semibold text-[#6abf7b]">{p1.name.split('(')[0].trim()}</th>
-                  <th className="py-2 px-4 font-semibold text-[#e6e6e6]">{p2.name.split('(')[0].trim()}</th>
+                  <th className="py-2 px-4 font-semibold text-[#3ddc84]">{p1.name.split('(')[0].trim()}</th>
+                  <th className="py-2 px-4 font-semibold text-[#e6e8ea]">{p2.name.split('(')[0].trim()}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#2a2a2a]">
+              <tbody className="divide-y divide-[#2a2e33]">
                 {rows.map(r => (
-                  <tr key={r.label} className="hover:bg-[#222222]">
-                    <td className="py-2 px-4 text-[#8f8f8f] font-medium whitespace-nowrap">{r.label}</td>
-                    <td className="py-2 px-4 text-[#e6e6e6] font-mono tabular-nums">{r.v1}</td>
-                    <td className="py-2 px-4 text-[#e6e6e6] font-mono tabular-nums">{r.v2}</td>
+                  <tr key={r.label} className="hover:bg-[#22262b] transition-colors duration-150">
+                    <td className="py-2 px-4 text-[#8b9199] font-medium whitespace-nowrap">{r.label}</td>
+                    <td className="py-2 px-4 text-[#e6e8ea] font-mono tabular-nums">{r.v1}</td>
+                    <td className="py-2 px-4 text-[#e6e8ea] font-mono tabular-nums">{r.v2}</td>
                   </tr>
                 ))}
               </tbody>
@@ -140,7 +128,7 @@ export function PresetsTab({
           const parentWithAddons = treeNodes.filter(n => n.children.length > 0);
           const standaloneRoots = treeNodes.filter(n => n.children.length === 0);
           const badgeTone =
-            preset.badgeColor === 'emerald' ? 'text-[#6abf7b]' : 'text-[#8f8f8f]';
+            preset.badgeColor === 'emerald' ? 'text-[#3ddc84]' : 'text-[#8b9199]';
 
           const presetHealth = evaluateAssemblyHealth(preset.modIds);
           const presetSummary = summarizeAssemblyImpact(preset.modIds, presetHealth);
@@ -153,82 +141,76 @@ export function PresetsTab({
           return (
             <div
               key={preset.id}
-              className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[6px] p-5 flex flex-col justify-between gap-4"
+              className="bg-[#1a1d21] border border-[#2a2e33] rounded-[6px] p-4 flex flex-col justify-between gap-4"
             >
               <div className="space-y-3">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="text-base font-semibold text-[#e6e6e6]">{preset.name}</h3>
+                  <h3 className="text-base font-semibold text-[#e6e8ea]">{preset.name}</h3>
                   <span className={`text-xs font-medium ${badgeTone}`}>{preset.badge}</span>
                 </div>
-                <p className="text-xs text-[#8f8f8f] leading-relaxed">{preset.description}</p>
+                <p className="text-xs text-[#8b9199] leading-relaxed">{preset.description}</p>
 
-                {/* Stats & Resource Balance */}
-                <div className="rounded-[6px] bg-[#141414] border border-[#2a2a2a] px-3.5 py-2.5 space-y-1.5 text-[11px]">
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[#8f8f8f] tabular-nums">
+                <div className="rounded-[4px] bg-[#121417] border border-[#2a2e33] px-3 py-2.5 space-y-1.5 text-[11px]">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[#8b9199] tabular-nums">
                     <span>
-                      Оценка: <strong className="text-[#4caf6a] font-mono">{presetSummary.assemblyScore}/100</strong>
+                      Оценка: <strong className="text-[#3ddc84] font-mono">{presetSummary.assemblyScore}/100</strong>
                     </span>
-                    <span className="text-[#2a2a2a]">·</span>
+                    <span className="text-[#2a2e33]">·</span>
                     <span>
                       Артефакты:{' '}
                       <strong
                         className={`font-mono ${
                           presetSummary.artifactRisk.level === 'critical'
-                            ? 'text-[#cf6d6d]'
+                            ? 'text-[#e55353]'
                             : presetSummary.artifactRisk.level === 'high' || presetSummary.artifactRisk.level === 'moderate'
-                              ? 'text-[#c99b52]'
-                              : 'text-[#6abf7b]'
+                              ? 'text-[#e5a93c]'
+                              : 'text-[#3ddc84]'
                         }`}
                       >
                         {presetSummary.artifactRisk.chancePct}% · {presetSummary.artifactRisk.label}
                       </strong>
                     </span>
-                    <span className="text-[#2a2a2a]">·</span>
+                    <span className="text-[#2a2e33]">·</span>
                     <span>
                       Прогноз:{' '}
-                      <strong className="text-[#6abf7b] font-mono">
+                      <strong className="text-[#3ddc84] font-mono">
                         {presetFps.label}
                       </strong>{' '}
-                      <span className="text-[#8f8f8f]">/</span>{' '}
-                      <strong className="text-[#e6e6e6] font-mono">
+                      <span className="text-[#8b9199]">/</span>{' '}
+                      <strong className="text-[#e6e8ea] font-mono">
                         {presetSummary.resourceBalance.ramDeltaLabel}
                       </strong>
                     </span>
-                    <span className="text-[#2a2a2a]">·</span>
-                    <span>
-                      Подсистемы: <strong className="text-[#e6e6e6] font-mono">{presetSummary.coveredSubsystems.length}/7</strong>
-                    </span>
-                    <span className="text-[#2a2a2a]">·</span>
+                    <span className="text-[#2a2e33]">·</span>
                     <span
                       className={`font-mono font-medium ${
                         presetRedCount > 0
-                          ? 'text-[#cf6d6d]'
+                          ? 'text-[#e55353]'
                           : presetYellowCount > 0
-                            ? 'text-[#c99b52]'
-                            : 'text-[#6abf7b]'
+                            ? 'text-[#e5a93c]'
+                            : 'text-[#3ddc84]'
                       }`}
                     >
                       {presetRedCount} конфл. / {presetYellowCount} замеч. ({preset.modIds.length} модов)
                     </span>
                   </div>
-                  <div className="text-[#8f8f8f]">
-                    <strong className="text-[#e6e6e6]">Риск:</strong> {preset.crashRisk}
+                  <div className="text-[#8b9199]">
+                    <strong className="text-[#e6e8ea]">Риск:</strong> {preset.crashRisk}
                   </div>
                 </div>
 
-                {/* Hierarchical List */}
-                <div className="divide-y divide-[#2a2a2a] border border-[#2a2a2a] rounded-[6px] bg-[#141414] max-h-[380px] overflow-y-auto">
+                <div className="divide-y divide-[#2a2e33] border border-[#2a2e33] rounded-[4px] bg-[#121417] max-h-[380px] overflow-y-auto">
                   {parentWithAddons.map((node, idx) => (
                     <div key={node.parent.id} className="px-3.5 py-2.5 space-y-1.5">
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex flex-wrap items-baseline gap-1.5 min-w-0">
-                          <span className="text-[11px] font-mono text-[#8f8f8f] tabular-nums">
+                          <span className="text-[11px] font-mono text-[#8b9199] tabular-nums">
                             {idx + 1}.
                           </span>
                           <button
                             type="button"
                             onClick={() => onOpenDetail(node.parent)}
-                            className="text-xs font-semibold text-[#e6e6e6] hover:text-[#4caf6a] text-left transition-colors"
+                            className="text-xs font-semibold text-[#e6e8ea] hover:text-[#3ddc84] text-left transition-colors duration-150"
                           >
                             {node.parent.name}
                           </button>
@@ -237,7 +219,7 @@ export function PresetsTab({
                           href={node.parent.curseforgeUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="shrink-0 inline-flex items-center gap-1 text-[#8f8f8f] hover:text-[#e6e6e6] text-[10px] font-mono transition-colors"
+                          className="shrink-0 inline-flex items-center gap-1 text-[#8b9199] hover:text-[#e6e8ea] text-[10px] font-mono transition-colors duration-150"
                           title="CurseForge"
                         >
                           CF
@@ -248,20 +230,20 @@ export function PresetsTab({
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pl-4 text-[11px]">
                         {node.children.map(({ mod: ch, relationLabel }) => (
                           <span key={ch.id} className="inline-flex items-center gap-1">
-                            <span className="text-[#8f8f8f]">↳</span>
+                            <span className="text-[#8b9199]">↳</span>
                             <button
                               type="button"
                               onClick={() => onOpenDetail(ch)}
-                              className="text-[#e6e6e6] hover:text-[#4caf6a] transition-colors"
+                              className="text-[#e6e8ea] hover:text-[#3ddc84] transition-colors duration-150"
                             >
                               {ch.name}
                             </button>
-                            <span className="text-[10px] text-[#8f8f8f]">({relationLabel})</span>
+                            <span className="text-[10px] text-[#8b9199]">({relationLabel})</span>
                             <a
                               href={ch.curseforgeUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[#8f8f8f] hover:text-[#e6e6e6] transition-colors"
+                              className="text-[#8b9199] hover:text-[#e6e8ea] transition-colors duration-150"
                               title="CurseForge"
                             >
                               <ExternalLink className="w-2.5 h-2.5" />
@@ -274,7 +256,7 @@ export function PresetsTab({
 
                   {standaloneRoots.length > 0 && (
                     <div className="px-3.5 py-2.5 space-y-1.5">
-                      <div className="text-[11px] font-medium text-[#8f8f8f]">
+                      <div className="text-[11px] font-medium text-[#8b9199]">
                         Остальные моды сборки ({standaloneRoots.length}):
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
@@ -288,9 +270,9 @@ export function PresetsTab({
                               <button
                                 type="button"
                                 onClick={() => onOpenDetail(m)}
-                                className="text-[#e6e6e6] hover:text-[#4caf6a] transition-colors truncate flex items-center gap-1.5 text-left"
+                                className="text-[#e6e8ea] hover:text-[#3ddc84] transition-colors duration-150 truncate flex items-center gap-1.5 text-left"
                               >
-                                <span className="text-[10px] font-mono text-[#8f8f8f] tabular-nums">
+                                <span className="text-[10px] font-mono text-[#8b9199] tabular-nums">
                                   {num}.
                                 </span>
                                 <span className="truncate">{m.name}</span>
@@ -299,7 +281,7 @@ export function PresetsTab({
                                 href={m.curseforgeUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-[#8f8f8f] hover:text-[#e6e6e6] transition-colors shrink-0"
+                                className="text-[#8b9199] hover:text-[#e6e8ea] transition-colors duration-150 shrink-0"
                                 title="CurseForge"
                               >
                                 <ExternalLink className="w-2.5 h-2.5" />
@@ -313,11 +295,11 @@ export function PresetsTab({
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-[#2a2a2a] flex flex-wrap items-center gap-2">
+              <div className="pt-3 border-t border-[#2a2e33] flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   onClick={() => handleCopyNamesList(preset)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[#4caf6a] hover:bg-[#439f5e] text-[#121212] text-xs font-semibold transition-colors whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] bg-[#3ddc84] hover:bg-[#34c776] text-[#0f1411] text-xs font-semibold transition-colors duration-150 whitespace-nowrap"
                 >
                   {copiedPresetId === preset.id ? (
                     <>
@@ -327,21 +309,21 @@ export function PresetsTab({
                   ) : (
                     <>
                       <Copy className="w-3.5 h-3.5" />
-                      Копировать списком
+                      Копировать список
                     </>
                   )}
                 </button>
                 <button
                   type="button"
                   onClick={() => onLoadToBuilder(preset)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-[#e6e6e6] text-xs font-medium transition-colors whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[#e6e8ea] text-xs font-medium transition-colors duration-150 whitespace-nowrap"
                 >
-                  В Клипание
+                  В Подбор
                 </button>
                 <button
                   type="button"
                   onClick={() => onLoadToChecker(preset)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-[#e6e6e6] text-xs font-medium transition-colors whitespace-nowrap ml-auto"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[#e6e8ea] text-xs font-medium transition-colors duration-150 whitespace-nowrap ml-auto"
                 >
                   В Чекер
                   <ArrowRight className="w-3.5 h-3.5" />

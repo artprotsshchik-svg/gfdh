@@ -44,18 +44,18 @@ export function ConfirmDialog({
       aria-describedby="confirm-dialog-desc"
     >
       <div
-        className="w-full max-w-md bg-[#1a1a1a] border border-[#2a2a2a] rounded-[6px] overflow-hidden"
+        className="w-full max-w-md bg-[#1a1d21] border border-[#2a2e33] rounded-[6px] overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
-        <div className="px-4 py-3 border-b border-[#2a2a2a] bg-[#141414] flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-sm font-semibold text-[#e6e6e6]" id="confirm-dialog-title">
-            <AlertTriangle className="w-4 h-4 text-[#c99b52] shrink-0" aria-hidden="true" />
+        <div className="px-4 py-3 border-b border-[#2a2e33] bg-[#121417] flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-sm font-semibold text-[#e6e8ea]" id="confirm-dialog-title">
+            <AlertTriangle className="w-4 h-4 text-[#e5a93c] shrink-0" aria-hidden="true" />
             <span>{title}</span>
           </div>
           <button
             type="button"
             onClick={onCancel}
-            className="p-1 rounded-[4px] text-[#8f8f8f] hover:text-[#e6e6e6] hover:bg-[#222222]"
+            className="p-1 rounded-[4px] text-[#8b9199] hover:text-[#e6e8ea] hover:bg-[#22262b] transition-colors duration-150"
             aria-label="Закрыть диалог"
           >
             <X className="w-4 h-4" />
@@ -63,14 +63,14 @@ export function ConfirmDialog({
         </div>
 
         <div className="p-4 space-y-4">
-          <p id="confirm-dialog-desc" className="text-xs text-[#8f8f8f] leading-relaxed">
+          <p id="confirm-dialog-desc" className="text-xs text-[#8b9199] leading-relaxed">
             {description}
           </p>
           <div className="flex items-center justify-end gap-2">
             <button
               type="button"
               onClick={onCancel}
-              className="px-3 py-1.5 rounded-[4px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-xs font-medium text-[#e6e6e6] transition-colors"
+              className="px-3 py-1.5 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-xs font-medium text-[#e6e8ea] transition-colors duration-150"
             >
               {cancelLabel}
             </button>
@@ -78,7 +78,7 @@ export function ConfirmDialog({
               type="button"
               autoFocus
               onClick={onConfirm}
-              className="px-3 py-1.5 rounded-[4px] bg-[#cf6d6d] hover:bg-[#bd5e5e] text-[#121212] text-xs font-semibold transition-colors"
+              className="px-3 py-1.5 rounded-[4px] bg-[#e55353] hover:bg-[#d14747] text-[#121417] text-xs font-semibold transition-colors duration-150"
             >
               {confirmLabel}
             </button>

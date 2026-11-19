@@ -11,29 +11,29 @@ export function StatusBadge({ tier, label, className = '' }: StatusBadgeProps) {
   switch (tier) {
     case 'green':
       return (
-        <span className={`inline-flex items-center gap-1 text-[#6abf7b] font-semibold whitespace-nowrap ${className}`}>
-          <CheckCircle2 className="w-3 h-3 shrink-0" aria-hidden="true" />
+        <span className={`inline-flex items-center gap-1 text-[#3ddc84] font-medium whitespace-nowrap ${className}`}>
+          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
           <span>{label}</span>
         </span>
       );
     case 'lime':
       return (
-        <span className={`inline-flex items-center gap-1 text-[#9ab86a] font-semibold whitespace-nowrap ${className}`}>
-          <Check className="w-3 h-3 shrink-0" aria-hidden="true" />
+        <span className={`inline-flex items-center gap-1 text-[#3ddc84] font-medium whitespace-nowrap ${className}`}>
+          <Check className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
           <span>{label}</span>
         </span>
       );
     case 'yellow':
       return (
-        <span className={`inline-flex items-center gap-1 text-[#c99b52] font-semibold whitespace-nowrap ${className}`}>
-          <AlertTriangle className="w-3 h-3 shrink-0" aria-hidden="true" />
+        <span className={`inline-flex items-center gap-1 text-[#e5a93c] font-medium whitespace-nowrap ${className}`}>
+          <AlertTriangle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
           <span>{label}</span>
         </span>
       );
     case 'red':
       return (
-        <span className={`inline-flex items-center gap-1 text-[#cf6d6d] font-semibold whitespace-nowrap ${className}`}>
-          <ShieldAlert className="w-3 h-3 shrink-0" aria-hidden="true" />
+        <span className={`inline-flex items-center gap-1 text-[#e55353] font-medium whitespace-nowrap ${className}`}>
+          <ShieldAlert className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
           <span>{label}</span>
         </span>
       );

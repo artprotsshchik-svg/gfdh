@@ -74,7 +74,7 @@ export default function App() {
   };
 
   const [activeTab, setActiveTabState] = useState<PersistedTabKey>(
-    initialLocal?.activeTab ?? 'catalog'
+    initialLocal?.activeTab ?? 'assembler'
   );
   const [selectedModDetail, setSelectedModDetail] = useState<ModItem | null>(null);
   const [checkedModIds, setCheckedModIdsState] = useState<string[]>(
@@ -276,7 +276,7 @@ export default function App() {
     setBuilderModIds(prev => toggleModSmart(prev, id, { strict: true, prefs: stateRef.current.builderPrefs }).nextIds);
   }, []);
 
-  // Global Keyboard Hotkeys: Ctrl+Z, Ctrl+Shift+Z / Ctrl+Y, /, ArrowUp/ArrowDown, Space (C4 + C6)
+  // Global Keyboard Hotkeys: Ctrl+Z, Ctrl+Shift+Z / Ctrl+Y, /, ArrowUp/ArrowDown, Space
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -287,7 +287,6 @@ export default function App() {
         tag === 'select' ||
         Boolean(target?.isContentEditable);
 
-      // Undo / Redo
       if ((e.ctrlKey || e.metaKey) && !e.altKey) {
         const key = e.key.toLowerCase();
         if (key === 'z' && !e.shiftKey && !isEditing) {
@@ -302,10 +301,8 @@ export default function App() {
         }
       }
 
-      // Skip navigation hotkeys when modal dialog is open
       if (document.querySelector('[role="dialog"], [role="alertdialog"]')) return;
 
-      // '/' focuses visible search box
       if (e.key === '/' && !isEditing && !e.ctrlKey && !e.metaKey && !e.altKey) {
         const searchInput = document.querySelector<HTMLInputElement>('[data-search-input="true"]');
         if (searchInput) {
@@ -318,7 +315,6 @@ export default function App() {
 
       if (isEditing) return;
 
-      // ArrowUp / ArrowDown across [data-mod-row]
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-mod-row="true"]'));
         if (rows.length === 0) return;
@@ -341,14 +337,12 @@ export default function App() {
         return;
       }
 
-      // Space toggles focused [data-mod-row] mod
       if (e.key === ' ') {
         const activeRow =
           target?.dataset?.modRow === 'true'
             ? target
             : (target?.closest?.('[data-mod-row="true"]') as HTMLElement | null);
         if (!activeRow) return;
-        // Let native buttons/links/inputs handle Space themselves if directly focused
         if (tag === 'button' || tag === 'a' || tag === 'input') return;
         const modId = activeRow.dataset.modId;
         const modContext = activeRow.dataset.modContext;
@@ -404,25 +398,25 @@ export default function App() {
     label: string;
     count: number;
   }> = [
+    { id: 'assembler', label: 'Подбор', count: builderModIds.length },
     { id: 'catalog', label: 'Каталог', count: MODS_DATABASE.length },
-    { id: 'assembler', label: 'Клипание сборок', count: builderModIds.length },
     { id: 'presets', label: 'Сборки', count: MOD_PRESETS.length },
     { id: 'checker', label: 'Чекер', count: checkedModIds.length },
     { id: 'configs', label: 'Конфиги', count: MOD_RECOMMENDED_CONFIGS.length },
   ];
 
   return (
-    <div className="min-h-screen bg-[#121212] text-[#e6e6e6] flex flex-col">
+    <div className="min-h-screen bg-[#121417] text-[#e6e8ea] flex flex-col">
       {/* Top Bar */}
-      <header className="sticky top-0 z-30 bg-[#1a1a1a] border-b border-[#2a2a2a]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-12 md:h-13 flex items-center justify-between gap-3">
+      <header className="sticky top-0 z-30 bg-[#1a1d21] border-b border-[#2a2e33]">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 h-12 flex items-center justify-between gap-3">
           <a
             href="#top"
             onClick={e => {
               e.preventDefault();
-              setActiveTab('catalog');
+              setActiveTab('assembler');
             }}
-            className="text-sm font-semibold tracking-tight text-[#e6e6e6] hover:text-[#4caf6a] transition-colors whitespace-nowrap shrink-0"
+            className="text-sm font-semibold tracking-tight text-[#e6e8ea] hover:text-[#3ddc84] transition-colors duration-150 whitespace-nowrap shrink-0"
           >
             Mod Optimizer
           </a>
@@ -435,16 +429,16 @@ export default function App() {
                   key={item.id}
                   type="button"
                   onClick={() => setActiveTab(item.id)}
-                  className={`px-3 py-1.5 rounded-[6px] text-[13px] font-medium transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 border ${
+                  className={`px-3 py-1.5 rounded-[4px] text-[13px] font-medium transition-colors duration-150 flex items-center gap-2 whitespace-nowrap shrink-0 border ${
                     active
-                      ? 'bg-[#242424] text-[#e6e6e6] font-semibold border-[#4caf6a]'
-                      : 'bg-transparent text-[#8f8f8f] hover:bg-[#222222] hover:text-[#e6e6e6] border-transparent'
+                      ? 'bg-[#22262b] text-[#e6e8ea] font-semibold border-[#3ddc84]'
+                      : 'bg-transparent text-[#8b9199] hover:bg-[#22262b] hover:text-[#e6e8ea] border-transparent'
                   }`}
                 >
                   <span>{item.label}</span>
                   <span
                     className={`text-[11px] font-mono tabular-nums ${
-                      active ? 'text-[#4caf6a]' : 'text-[#8f8f8f]'
+                      active ? 'text-[#3ddc84]' : 'text-[#8b9199]'
                     }`}
                   >
                     {item.count}
@@ -459,7 +453,7 @@ export default function App() {
               type="button"
               onClick={handleUndo}
               disabled={historyCounts.past === 0}
-              className="p-1.5 rounded-[4px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-[#e6e6e6] disabled:opacity-35 transition-colors"
+              className="p-1.5 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[#e6e8ea] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-150"
               title="Отменить (Ctrl+Z)"
               aria-label="Отменить (Ctrl+Z)"
             >
@@ -469,7 +463,7 @@ export default function App() {
               type="button"
               onClick={handleRedo}
               disabled={historyCounts.future === 0}
-              className="p-1.5 rounded-[4px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-[#e6e6e6] disabled:opacity-35 transition-colors"
+              className="p-1.5 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[#e6e8ea] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-150"
               title="Повторить (Ctrl+Shift+Z)"
               aria-label="Повторить (Ctrl+Shift+Z)"
             >
@@ -478,13 +472,13 @@ export default function App() {
             <button
               type="button"
               onClick={handleCopyShareLink}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded-[4px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-[11px] font-medium text-[#e6e6e6] transition-colors whitespace-nowrap"
+              className="inline-flex items-center gap-1 px-2 py-1 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[11px] font-medium text-[#e6e8ea] transition-colors duration-150 whitespace-nowrap"
               title="Скопировать ссылку с состоянием сборки (#hash)"
             >
-              {shareCopied ? <Check className="w-3 h-3 text-[#4caf6a]" /> : <Link2 className="w-3 h-3 text-[#8f8f8f]" />}
+              {shareCopied ? <Check className="w-3 h-3 text-[#3ddc84]" /> : <Link2 className="w-3 h-3 text-[#8b9199]" />}
               <span className="hidden sm:inline">{shareCopied ? 'Скопировано' : 'Ссылка'}</span>
             </button>
-            <span className="hidden xl:inline text-[11px] font-mono tabular-nums text-[#8f8f8f] pl-1 whitespace-nowrap">
+            <span className="hidden xl:inline text-[11px] font-mono tabular-nums text-[#8b9199] pl-1 whitespace-nowrap">
               Forge 1.20.1
             </span>
           </div>
@@ -492,7 +486,7 @@ export default function App() {
 
         {/* Mobile Nav */}
         <nav
-          className="flex md:hidden items-center gap-4 px-4 sm:px-6 border-t border-[#2a2a2a] overflow-x-auto no-scrollbar"
+          className="flex md:hidden items-center gap-3 px-4 sm:px-6 border-t border-[#2a2e33] overflow-x-auto no-scrollbar"
           aria-label="Разделы"
         >
           {navItems.map(item => {
@@ -502,14 +496,14 @@ export default function App() {
                 key={item.id}
                 type="button"
                 onClick={() => setActiveTab(item.id)}
-                className={`py-2 border-b-2 text-xs font-medium whitespace-nowrap shrink-0 transition-colors flex items-center gap-1.5 ${
+                className={`py-2 border-b-2 text-[11px] sm:text-xs font-medium whitespace-nowrap shrink-0 transition-colors duration-150 flex items-center gap-1 ${
                   active
-                    ? 'border-[#4caf6a] text-[#e6e6e6] font-semibold'
-                    : 'border-transparent text-[#8f8f8f] hover:text-[#e6e6e6]'
+                    ? 'border-[#3ddc84] text-[#e6e8ea] font-semibold'
+                    : 'border-transparent text-[#8b9199] hover:text-[#e6e8ea]'
                 }`}
               >
                 <span>{item.label}</span>
-                <span className={`text-[11px] font-mono tabular-nums ${active ? 'text-[#4caf6a]' : 'text-[#8f8f8f]'}`}>
+                <span className={`text-[10px] sm:text-[11px] font-mono tabular-nums ${active ? 'text-[#3ddc84]' : 'text-[#8b9199]'}`}>
                   {item.count}
                 </span>
               </button>
@@ -519,18 +513,7 @@ export default function App() {
       </header>
 
       {/* Main Content Viewport */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-5">
-        {activeTab === 'catalog' && (
-          <CatalogTab
-            checkedModIds={checkedModIds}
-            toggleCheckerMod={toggleCheckerMod}
-            builderSet={builderSet}
-            onToggleBuilderMod={toggleBuilderMod}
-            builderPrefs={builderPrefs}
-            onOpenDetail={setSelectedModDetail}
-          />
-        )}
-
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 py-4">
         {activeTab === 'assembler' && (
           <AssemblyBuilderTab
             selectedIds={builderModIds}
@@ -542,6 +525,17 @@ export default function App() {
               setCheckedModIds(ids);
               setActiveTab('checker');
             }}
+          />
+        )}
+
+        {activeTab === 'catalog' && (
+          <CatalogTab
+            checkedModIds={checkedModIds}
+            toggleCheckerMod={toggleCheckerMod}
+            builderSet={builderSet}
+            onToggleBuilderMod={toggleBuilderMod}
+            builderPrefs={builderPrefs}
+            onOpenDetail={setSelectedModDetail}
           />
         )}
 
@@ -578,7 +572,7 @@ export default function App() {
         builderModIds={builderModIds}
         onToggleBuilderMod={toggleBuilderMod}
         activeModIds={activeTab === 'checker' ? checkedModIds : builderModIds}
-        contextSourceLabel={activeTab === 'checker' ? 'Чекер' : 'Клипание сборок'}
+        contextSourceLabel={activeTab === 'checker' ? 'Чекер' : 'Подбор'}
         builderPrefs={builderPrefs}
         onChooseVariantInBuilder={mod => {
           const alreadySelected = builderModIds.includes(mod.id);

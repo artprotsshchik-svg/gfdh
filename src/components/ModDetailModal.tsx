@@ -136,12 +136,12 @@ export function ModDetailModal({
   const baseTier = getBaseHealthTier(mod);
   const tierColor =
     baseTier === 'red'
-      ? 'text-[#cf6d6d]'
+      ? 'text-[#e55353]'
       : baseTier === 'green'
-        ? 'text-[#6abf7b]'
+        ? 'text-[#3ddc84]'
         : baseTier === 'lime'
-          ? 'text-[#9ab86a]'
-          : 'text-[#c99b52]';
+          ? 'text-[#3ddc84]'
+          : 'text-[#e5a93c]';
 
   const isSelectedInChecker = checkedModIds.includes(mod.id);
   const isSelectedInBuilder = builderModIds.includes(mod.id);
@@ -156,31 +156,31 @@ export function ModDetailModal({
       aria-label={mod.name}
     >
       <div
-        className="w-full max-w-3xl max-h-[88vh] overflow-y-auto bg-[#1a1a1a] border border-[#2a2a2a] rounded-[6px]"
+        className="w-full max-w-3xl max-h-[88vh] overflow-y-auto bg-[#1a1d21] border border-[#2a2e33] rounded-[6px]"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-[#1a1a1a] px-6 py-4 border-b border-[#2a2a2a] flex items-start justify-between gap-4">
+        <div className="sticky top-0 z-10 bg-[#1a1d21] px-6 py-4 border-b border-[#2a2e33] flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs mb-1">
               <span className={`font-semibold ${tierColor}`}>
                 {cleanStatusLabel(mod.statusLabel)}
               </span>
-              <span className="text-[#8f8f8f]">
-                <span className="text-[#2a2a2a] mr-2" aria-hidden="true">·</span>
+              <span className="text-[#8b9199]">
+                <span className="text-[#2a2e33] mr-2" aria-hidden="true">·</span>
                 {mod.platform}
               </span>
               {(mod.isGroupLeader || mod.isGroupAddon) && (
-                <span className="text-[#6abf7b] font-medium">
-                  <span className="text-[#2a2a2a] mr-2" aria-hidden="true">·</span>
+                <span className="text-[#3ddc84] font-medium">
+                  <span className="text-[#2a2e33] mr-2" aria-hidden="true">·</span>
                   {mod.isGroupLeader ? 'Лидер группы' : 'Аддон'}
                 </span>
               )}
             </div>
-            <h2 className="text-xl font-semibold text-[#e6e6e6] leading-tight break-words tracking-tight">
+            <h2 className="text-xl font-semibold text-[#e6e8ea] leading-tight break-words tracking-tight">
               {mod.name}
             </h2>
-            <p className="text-xs text-[#8f8f8f] mt-0.5">
+            <p className="text-xs text-[#8b9199] mt-0.5">
               {mod.category}
               {mod.groupTitle ? ` · ${mod.groupTitle}` : ''}
             </p>
@@ -188,7 +188,7 @@ export function ModDetailModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-[4px] text-[#8f8f8f] hover:text-[#e6e6e6] hover:bg-[#222222] transition-colors shrink-0"
+            className="p-1.5 rounded-[4px] text-[#8b9199] hover:text-[#e6e8ea] hover:bg-[#22262b] transition-colors duration-150 shrink-0"
             aria-label="Закрыть"
           >
             <X className="w-5 h-5" />
@@ -202,7 +202,7 @@ export function ModDetailModal({
               href={mod.curseforgeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[6px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-[#e6e6e6] text-xs font-semibold transition-colors whitespace-nowrap"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-[6px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[#e6e8ea] text-xs font-semibold transition-colors duration-150 whitespace-nowrap"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               CurseForge
@@ -212,27 +212,27 @@ export function ModDetailModal({
               <button
                 type="button"
                 onClick={() => onToggleBuilderMod(mod.id)}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] text-xs font-semibold border transition-colors whitespace-nowrap ${
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] text-xs font-semibold border transition-colors duration-150 whitespace-nowrap ${
                   isSelectedInBuilder
-                    ? 'bg-[#4caf6a]/15 border-[#4caf6a] text-[#e6e6e6]'
-                    : 'bg-[#141414] border-[#2a2a2a] text-[#e6e6e6] hover:bg-[#222222]'
+                    ? 'bg-[#3ddc84]/15 border-[#3ddc84] text-[#e6e8ea]'
+                    : 'bg-[#121417] border-[#2a2e33] text-[#e6e8ea] hover:bg-[#22262b]'
                 }`}
               >
-                {isSelectedInBuilder ? <Check className="w-3.5 h-3.5 text-[#4caf6a]" /> : <Plus className="w-3.5 h-3.5" />}
-                {isSelectedInBuilder ? 'В Клипании' : 'В сборку'}
+                {isSelectedInBuilder ? <Check className="w-3.5 h-3.5 text-[#3ddc84]" /> : <Plus className="w-3.5 h-3.5" />}
+                {isSelectedInBuilder ? 'В Подборе' : 'В сборку'}
               </button>
             )}
 
             <button
               type="button"
               onClick={() => onToggleCheckMod(mod.id)}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] text-xs font-semibold border transition-colors whitespace-nowrap ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] text-xs font-semibold border transition-colors duration-150 whitespace-nowrap ${
                 isSelectedInChecker
-                  ? 'bg-[#4caf6a]/15 border-[#4caf6a] text-[#e6e6e6]'
-                  : 'bg-[#141414] border-[#2a2a2a] text-[#e6e6e6] hover:bg-[#222222]'
+                  ? 'bg-[#3ddc84]/15 border-[#3ddc84] text-[#e6e8ea]'
+                  : 'bg-[#121417] border-[#2a2e33] text-[#e6e8ea] hover:bg-[#22262b]'
               }`}
             >
-              {isSelectedInChecker ? <Check className="w-3.5 h-3.5 text-[#4caf6a]" /> : <Plus className="w-3.5 h-3.5" />}
+              {isSelectedInChecker ? <Check className="w-3.5 h-3.5 text-[#3ddc84]" /> : <Plus className="w-3.5 h-3.5" />}
               {isSelectedInChecker ? 'В Чекере' : 'В Чекер'}
             </button>
 
@@ -240,7 +240,7 @@ export function ModDetailModal({
               <button
                 type="button"
                 onClick={() => onFocusModInBuilder(mod)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] text-xs font-semibold bg-[#4caf6a] hover:bg-[#439f5e] text-[#121212] transition-colors whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] text-xs font-semibold bg-[#3ddc84] hover:bg-[#34c776] text-[#121417] transition-colors duration-150 whitespace-nowrap"
               >
                 Собрать под этот мод
               </button>
@@ -250,7 +250,7 @@ export function ModDetailModal({
               <button
                 type="button"
                 onClick={() => onSelectMod(groupInfo.leader!)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] text-xs font-semibold bg-[#141414] border border-[#2a2a2a] text-[#8f8f8f] hover:text-[#e6e6e6] hover:bg-[#222222] transition-colors whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] text-xs font-semibold bg-[#121417] border border-[#2a2e33] text-[#8b9199] hover:text-[#e6e8ea] hover:bg-[#22262b] transition-colors duration-150 whitespace-nowrap"
               >
                 Лидер: {groupInfo.leader.name}
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -259,21 +259,21 @@ export function ModDetailModal({
           </div>
 
           {/* Description & Key Verdicts */}
-          <div className="bg-[#141414] border border-[#2a2a2a] rounded-[6px] p-4 space-y-3">
-            <p className="text-sm text-[#e6e6e6] leading-relaxed">{cleanModDescription(mod.description)}</p>
+          <div className="bg-[#121417] border border-[#2a2e33] rounded-[6px] p-4 space-y-3">
+            <p className="text-sm text-[#e6e8ea] leading-relaxed">{cleanModDescription(mod.description)}</p>
 
             {mod.coveredBy && (
-              <div className="flex items-start gap-2.5 p-3 rounded-[4px] bg-[#c99b52]/[0.06] border border-[#c99b52]/30 text-xs text-[#c99b52]">
+              <div className="flex items-start gap-2.5 p-3 rounded-[4px] bg-[#e5a93c]/[0.06] border border-[#e5a93c]/30 text-xs text-[#e5a93c]">
                 <PackageCheck className="w-4 h-4 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-semibold">Бесполезен как отдельный мод:</span> функционал уже встроен в{' '}
-                  <span className="font-semibold text-[#e6e6e6]">{mod.coveredBy}</span>.
+                  <span className="font-semibold text-[#e6e8ea]">{mod.coveredBy}</span>.
                 </div>
               </div>
             )}
 
             {!mod.coveredBy && supersederInfo && (
-              <div className="flex items-start gap-2.5 p-3 rounded-[4px] bg-[#c99b52]/[0.06] border border-[#c99b52]/30 text-xs text-[#c99b52]">
+              <div className="flex items-start gap-2.5 p-3 rounded-[4px] bg-[#e5a93c]/[0.06] border border-[#e5a93c]/30 text-xs text-[#e5a93c]">
                 <PackageCheck className="w-4 h-4 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-semibold">
@@ -288,8 +288,8 @@ export function ModDetailModal({
               <div
                 className={`flex items-start gap-2.5 p-3 rounded-[4px] border text-xs ${
                   bridgeInfo && !bridgeInfo.compatible
-                    ? 'bg-[#cf6d6d]/[0.06] border-[#cf6d6d]/30 text-[#cf6d6d]'
-                    : 'bg-[#1a1a1a] border-[#2a2a2a] text-[#e6e6e6]'
+                    ? 'bg-[#e55353]/[0.06] border-[#e55353]/30 text-[#e55353]'
+                    : 'bg-[#1a1d21] border-[#2a2e33] text-[#e6e8ea]'
                 }`}
               >
                 <ArrowLeftRight className="w-4 h-4 shrink-0 mt-0.5" />
@@ -313,7 +313,7 @@ export function ModDetailModal({
             )}
 
             {mod.bestAlternative && (
-              <div className="flex items-start gap-2.5 p-3 rounded-[4px] bg-[#4caf6a]/[0.06] border border-[#4caf6a]/30 text-xs text-[#6abf7b]">
+              <div className="flex items-start gap-2.5 p-3 rounded-[4px] bg-[#3ddc84]/[0.06] border border-[#3ddc84]/30 text-xs text-[#3ddc84]">
                 <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-semibold">Вердикт / Рекомендация:</span> {mod.bestAlternative}
@@ -322,11 +322,11 @@ export function ModDetailModal({
             )}
 
             {mod.warning && (
-              <div className="flex items-start gap-2.5 p-3 rounded-[4px] bg-[#cf6d6d]/[0.06] border border-[#cf6d6d]/30 text-xs text-[#cf6d6d]">
+              <div className="flex items-start gap-2.5 p-3 rounded-[4px] bg-[#e55353]/[0.06] border border-[#e55353]/30 text-xs text-[#e55353]">
                 {mod.status === 'danger' ? (
                   <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
                 ) : (
-                  <AlertTriangle className="w-4 h-4 text-[#c99b52] shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-4 h-4 text-[#e5a93c] shrink-0 mt-0.5" />
                 )}
                 <div>
                   <span className="font-semibold">Важно:</span> {mod.warning}
@@ -339,24 +339,24 @@ export function ModDetailModal({
           {mod.id === 'nvidium' && (
             <section
               aria-label="Конфиг Nvidium"
-              className="bg-[#141414] border border-[#2a2a2a] rounded-[6px] overflow-hidden"
+              className="bg-[#121417] border border-[#2a2e33] rounded-[6px] overflow-hidden"
             >
               <button
                 type="button"
                 onClick={() => setConfigOpen(v => !v)}
                 aria-expanded={configOpen}
-                className="w-full px-4 py-3 flex items-center justify-between gap-2 text-left hover:bg-[#222222] transition-colors"
+                className="w-full px-4 py-3 flex items-center justify-between gap-2 text-left hover:bg-[#22262b] transition-colors duration-150"
               >
-                <span className="text-sm font-semibold text-[#e6e6e6]">Конфиг</span>
-                <span className="text-xs text-[#8f8f8f] inline-flex items-center gap-1">
+                <span className="text-sm font-semibold text-[#e6e8ea]">Конфиг</span>
+                <span className="text-xs text-[#8b9199] inline-flex items-center gap-1">
                   {configOpen ? 'Свернуть' : 'Развернуть'}
                   {configOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </span>
               </button>
               {configOpen && (
-                <div className="px-4 pb-4 pt-2 border-t border-[#2a2a2a] space-y-2.5">
+                <div className="px-4 pb-4 pt-2 border-t border-[#2a2e33] space-y-2.5">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs text-[#8f8f8f] font-mono">config/nvidium.json</span>
+                    <span className="text-xs text-[#8b9199] font-mono">config/nvidium.json</span>
                     <button
                       type="button"
                       onClick={() => {
@@ -364,13 +364,13 @@ export function ModDetailModal({
                         setConfigCopied(true);
                         setTimeout(() => setConfigCopied(false), 1800);
                       }}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-[#1a1a1a] hover:bg-[#222222] border border-[#2a2a2a] text-xs font-medium text-[#e6e6e6] transition-colors"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-[#1a1d21] hover:bg-[#22262b] border border-[#2a2e33] text-xs font-medium text-[#e6e8ea] transition-colors duration-150"
                     >
-                      {configCopied ? <Check className="w-3.5 h-3.5 text-[#4caf6a]" /> : <Copy className="w-3.5 h-3.5" />}
+                      {configCopied ? <Check className="w-3.5 h-3.5 text-[#3ddc84]" /> : <Copy className="w-3.5 h-3.5" />}
                       {configCopied ? 'Скопировано' : 'Копировать'}
                     </button>
                   </div>
-                  <pre className="p-3 rounded-[4px] bg-[#121212] border border-[#2a2a2a] font-mono text-xs text-[#e6e6e6] overflow-x-auto select-all">{NVIDIUM_CONFIG_CONTENT}</pre>
+                  <pre className="p-3 rounded-[4px] bg-[#121417] border border-[#2a2e33] font-mono text-xs text-[#e6e8ea] overflow-x-auto select-all">{NVIDIUM_CONFIG_CONTENT}</pre>
                 </div>
               )}
             </section>
@@ -380,15 +380,15 @@ export function ModDetailModal({
           {resourceProfile && (
             <section
               aria-label="Влияние на FPS и компромиссы"
-              className="bg-[#141414] border border-[#2a2a2a] rounded-[6px] p-4 space-y-4"
+              className="bg-[#121417] border border-[#2a2e33] rounded-[6px] p-4 space-y-4"
             >
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#2a2a2a]">
-                <h3 className="text-sm font-semibold text-[#e6e6e6]">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#2a2e33]">
+                <h3 className="text-sm font-semibold text-[#e6e8ea]">
                   Влияние и компромиссы
                 </h3>
                 <span
                   className={`text-xs font-medium ${
-                    resourceProfile.hasTradeoff ? 'text-[#c99b52]' : 'text-[#6abf7b]'
+                    resourceProfile.hasTradeoff ? 'text-[#e5a93c]' : 'text-[#3ddc84]'
                   }`}
                 >
                   {resourceProfile.shortTag}
@@ -396,28 +396,28 @@ export function ModDetailModal({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="rounded-[6px] bg-[#1a1a1a] border border-[#2a2a2a] p-3 space-y-1.5">
-                  <div className="text-[11px] font-semibold uppercase tracking-wider text-[#6abf7b]">
+                <div className="rounded-[6px] bg-[#1a1d21] border border-[#2a2e33] p-3 space-y-1.5">
+                  <div className="text-[11px] font-semibold uppercase tracking-wider text-[#3ddc84]">
                     Что ускоряет
                   </div>
-                  <ul className="space-y-1 text-xs text-[#e6e6e6] leading-snug">
+                  <ul className="space-y-1 text-xs text-[#e6e8ea] leading-snug">
                     {resourceProfile.gains.map((g, idx) => (
                       <li key={idx} className="flex items-start gap-1.5">
-                        <span className="text-[#6abf7b] shrink-0 mt-0.5">+</span>
+                        <span className="text-[#3ddc84] shrink-0 mt-0.5">+</span>
                         <span>{g}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="rounded-[6px] bg-[#1a1a1a] border border-[#2a2a2a] p-3 space-y-1.5">
-                  <div className="text-[11px] font-semibold uppercase tracking-wider text-[#c99b52]">
+                <div className="rounded-[6px] bg-[#1a1d21] border border-[#2a2e33] p-3 space-y-1.5">
+                  <div className="text-[11px] font-semibold uppercase tracking-wider text-[#e5a93c]">
                     Нюансы / ограничения
                   </div>
-                  <ul className="space-y-1 text-xs text-[#e6e6e6] leading-snug">
+                  <ul className="space-y-1 text-xs text-[#e6e8ea] leading-snug">
                     {resourceProfile.costs.map((c, idx) => (
                       <li key={idx} className="flex items-start gap-2">
-                        <span className="text-[#c99b52] shrink-0">—</span>
+                        <span className="text-[#e5a93c] shrink-0">—</span>
                         <span>{c}</span>
                       </li>
                     ))}
@@ -425,7 +425,7 @@ export function ModDetailModal({
                 </div>
               </div>
 
-              <p className="text-xs text-[#8f8f8f] leading-relaxed pt-0.5">
+              <p className="text-xs text-[#8b9199] leading-relaxed pt-0.5">
                 {resourceProfile.tradeoffNote}
               </p>
             </section>
@@ -447,22 +447,22 @@ export function ModDetailModal({
                 : `${contextImpact.relativeImpactPct}%`;
             const impactTone =
               contextImpact.relativeImpactPct > 0
-                ? 'text-[#6abf7b]'
+                ? 'text-[#3ddc84]'
                 : contextImpact.relativeImpactPct < 0
-                  ? 'text-[#cf6d6d]'
-                  : 'text-[#c99b52]';
+                  ? 'text-[#e55353]'
+                  : 'text-[#e5a93c]';
             const betterMod = contextImpact.betterAnalogId
               ? MODS_DATABASE.find(m => m.id === contextImpact.betterAnalogId) || null
               : null;
 
             return (
-              <div className="bg-[#141414] border border-[#2a2a2a] rounded-[6px] p-4 space-y-3">
-                <div className="flex flex-wrap items-baseline justify-between gap-2 pb-2.5 border-b border-[#2a2a2a]">
+              <div className="bg-[#121417] border border-[#2a2e33] rounded-[6px] p-4 space-y-3">
+                <div className="flex flex-wrap items-baseline justify-between gap-2 pb-2.5 border-b border-[#2a2e33]">
                   <div>
-                    <h3 className="text-sm font-semibold text-[#e6e6e6]">
+                    <h3 className="text-sm font-semibold text-[#e6e8ea]">
                       Взаимодействие и относительный импакт ({contextSourceLabel})
                     </h3>
-                    <p className="text-[11px] text-[#8f8f8f] mt-0.5">
+                    <p className="text-[11px] text-[#8b9199] mt-0.5">
                       {contextImpact.inPack
                         ? `Уже в сборке · ${coUsageLabelMap[contextImpact.coUsageVerdict]}`
                         : `При добавлении к текущей сборке · ${coUsageLabelMap[contextImpact.coUsageVerdict]}`}
@@ -473,47 +473,47 @@ export function ModDetailModal({
                       {contextImpact.inPack ? 'Вклад ' : 'Добавит '}
                       {relPctText}
                     </span>
-                    <span className="text-[#2a2a2a]" aria-hidden="true">·</span>
-                    <span className="font-semibold text-[#e6e6e6]">{contextImpact.impactPoints} / 100 б.</span>
-                    <span className="text-[#2a2a2a]" aria-hidden="true">·</span>
-                    <span className="text-[#8f8f8f]">{contextImpact.label}</span>
+                    <span className="text-[#2a2e33]" aria-hidden="true">·</span>
+                    <span className="font-semibold text-[#e6e8ea]">{contextImpact.impactPoints} / 100 б.</span>
+                    <span className="text-[#2a2e33]" aria-hidden="true">·</span>
+                    <span className="text-[#8b9199]">{contextImpact.label}</span>
                   </div>
                 </div>
-                <p className="text-xs text-[#e6e6e6] leading-relaxed">{contextImpact.summary}</p>
+                <p className="text-xs text-[#e6e8ea] leading-relaxed">{contextImpact.summary}</p>
                 {betterMod && contextImpact.betterAnalogDeltaPoints !== undefined && (
-                  <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-[4px] bg-[#1a1a1a] border border-[#2a2a2a] text-xs">
-                    <span className="text-[#e6e6e6]">
-                      Сильнее аналог: <strong className="text-[#e6e6e6]">{betterMod.name}</strong>{' '}
-                      <span className="text-[#6abf7b] font-mono font-semibold tabular-nums">
+                  <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-[4px] bg-[#1a1d21] border border-[#2a2e33] text-xs">
+                    <span className="text-[#e6e8ea]">
+                      Сильнее аналог: <strong className="text-[#e6e8ea]">{betterMod.name}</strong>{' '}
+                      <span className="text-[#3ddc84] font-mono font-semibold tabular-nums">
                         (+{contextImpact.betterAnalogDeltaPoints} б.)
                       </span>
                     </span>
                     <button
                       type="button"
                       onClick={() => onSelectMod(betterMod)}
-                      className="px-2.5 py-1 rounded-[4px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-[#4caf6a] text-[11px] font-semibold"
+                      className="px-2.5 py-1 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[#3ddc84] text-[11px] font-semibold"
                     >
                       Сравнить с {betterMod.name}
                     </button>
                   </div>
                 )}
                 {contextImpact.interactions.length > 0 && (
-                  <div className="divide-y divide-[#2a2a2a] rounded-[4px] border border-[#2a2a2a] bg-[#1a1a1a] overflow-hidden">
+                  <div className="divide-y divide-[#2a2e33] rounded-[4px] border border-[#2a2e33] bg-[#1a1d21] overflow-hidden">
                     {contextImpact.interactions.map((inter, idx) => (
                       <div
                         key={idx}
                         className={`px-3 py-2 text-[11px] leading-snug ${
                           inter.kind === 'conflict'
-                            ? 'text-[#cf6d6d]'
+                            ? 'text-[#e55353]'
                             : inter.kind === 'overlap'
-                              ? 'text-[#c99b52]'
+                              ? 'text-[#e5a93c]'
                               : inter.kind === 'synergy'
-                                ? 'text-[#6abf7b]'
-                                : 'text-[#8f8f8f]'
+                                ? 'text-[#3ddc84]'
+                                : 'text-[#8b9199]'
                         }`}
                       >
                         {inter.targetNames.length > 0 && (
-                          <span className="font-semibold text-[#e6e6e6]">[{inter.targetNames.join(' + ')}] </span>
+                          <span className="font-semibold text-[#e6e8ea]">[{inter.targetNames.join(' + ')}] </span>
                         )}
                         {inter.summary}
                       </div>
@@ -526,12 +526,12 @@ export function ModDetailModal({
 
           {/* Dual Port Choice */}
           {dualPairMods && dualPairMods.forgeMod && dualPairMods.fabricMod && (
-            <div className="bg-[#141414] border border-[#2a2a2a] rounded-[6px] p-4 space-y-3">
+            <div className="bg-[#121417] border border-[#2a2e33] rounded-[6px] p-4 space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="text-sm font-semibold text-[#e6e6e6]">
+                <h3 className="text-sm font-semibold text-[#e6e8ea]">
                   Выбор реализации: {dualPairMods.pair.title}
                 </h3>
-                <span className="text-[11px] text-[#8f8f8f]">
+                <span className="text-[11px] text-[#8b9199]">
                   {dualPairMods.pair.switchableOnForge
                     ? 'Оба варианта работают на Forge 1.20.1'
                     : 'На Forge работает только нативный порт'}
@@ -558,26 +558,26 @@ export function ModDetailModal({
                   const isCurrent = item.target.id === mod.id;
                   const borderCls =
                     item.tone === 'rose'
-                      ? 'border-[#cf6d6d]/40 bg-[#cf6d6d]/[0.05]'
+                      ? 'border-[#e55353]/40 bg-[#e55353]/[0.05]'
                       : isCurrent
-                        ? 'border-[#4caf6a] bg-[#4caf6a]/[0.06]'
-                        : 'border-[#2a2a2a] bg-[#1a1a1a]';
+                        ? 'border-[#3ddc84] bg-[#3ddc84]/[0.06]'
+                        : 'border-[#2a2e33] bg-[#1a1d21]';
                   return (
                     <div key={item.target.id} className={`rounded-[6px] border p-3 flex flex-col justify-between gap-2.5 ${borderCls}`}>
                       <div className="space-y-1">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[11px] font-medium text-[#8f8f8f]">{item.role}</span>
+                          <span className="text-[11px] font-medium text-[#8b9199]">{item.role}</span>
                           <a
                             href={item.target.curseforgeUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[11px] font-mono text-[#8f8f8f] hover:text-[#e6e6e6] inline-flex items-center gap-1"
+                            className="text-[11px] font-mono text-[#8b9199] hover:text-[#e6e8ea] inline-flex items-center gap-1"
                           >
                             CF <ExternalLink className="w-3 h-3" />
                           </a>
                         </div>
-                        <div className="text-xs font-semibold text-[#e6e6e6]">{item.target.name}</div>
-                        <p className="text-[11px] text-[#8f8f8f] leading-snug">{item.summary}</p>
+                        <div className="text-xs font-semibold text-[#e6e8ea]">{item.target.name}</div>
+                        <p className="text-[11px] text-[#8b9199] leading-snug">{item.summary}</p>
                       </div>
 
                       <div className="flex flex-wrap items-center gap-1.5">
@@ -585,7 +585,7 @@ export function ModDetailModal({
                           <button
                             type="button"
                             onClick={() => onSelectMod(item.target)}
-                            className="px-2.5 py-1 rounded-[4px] bg-[#141414] hover:bg-[#222222] border border-[#2a2a2a] text-[11px] text-[#e6e6e6] font-medium"
+                            className="px-2.5 py-1 rounded-[4px] bg-[#121417] hover:bg-[#22262b] border border-[#2a2e33] text-[11px] text-[#e6e8ea] font-medium"
                           >
                             Открыть
                           </button>
@@ -594,9 +594,9 @@ export function ModDetailModal({
                           <button
                             type="button"
                             onClick={() => onChooseVariantInBuilder(item.target)}
-                            className="px-2.5 py-1 rounded-[4px] text-[11px] font-semibold bg-[#4caf6a] hover:bg-[#439f5e] text-[#121212] transition-colors"
+                            className="px-2.5 py-1 rounded-[4px] text-[11px] font-semibold bg-[#3ddc84] hover:bg-[#34c776] text-[#121417] transition-colors duration-150"
                           >
-                            Выбрать в Клипании
+                            Выбрать в Подборе
                           </button>
                         )}
                       </div>
@@ -611,46 +611,46 @@ export function ModDetailModal({
           {groupInfo && groupInfo.addons.length > 0 && (
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-[#e6e6e6]">
+                <h3 className="text-sm font-semibold text-[#e6e8ea]">
                   Совместимые аддоны и дополнения ({groupInfo.addons.length})
                 </h3>
-                <span className="text-[11px] text-[#8f8f8f]">Дополняют лидера, не заменяя его</span>
+                <span className="text-[11px] text-[#8b9199]">Дополняют лидера, не заменяя его</span>
               </div>
-              <div className="divide-y divide-[#2a2a2a] border border-[#2a2a2a] rounded-[6px] overflow-hidden bg-[#141414]">
+              <div className="divide-y divide-[#2a2e33] border border-[#2a2e33] rounded-[6px] overflow-hidden bg-[#121417]">
                 {groupInfo.addons.map(addon => {
                   const addonTier = getBaseHealthTier(addon);
                   const statusTone =
                     addonTier === 'red'
-                      ? 'text-[#cf6d6d]'
+                      ? 'text-[#e55353]'
                       : addonTier === 'green'
-                        ? 'text-[#6abf7b]'
+                        ? 'text-[#3ddc84]'
                         : addonTier === 'lime'
-                          ? 'text-[#9ab86a]'
-                          : 'text-[#c99b52]';
+                          ? 'text-[#3ddc84]'
+                          : 'text-[#e5a93c]';
                   const addonRp = getModResourceProfile(addon);
                   return (
                     <div
                       key={addon.id}
                       onClick={() => onSelectMod(addon)}
-                      className="px-4 py-2.5 hover:bg-[#1f1f1f] cursor-pointer transition-colors flex items-start justify-between gap-3"
+                      className="px-4 py-2.5 hover:bg-[#22262b] cursor-pointer transition-colors duration-150 flex items-start justify-between gap-3"
                     >
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-baseline gap-x-2 text-xs">
-                          <span className="font-semibold text-[#e6e6e6]">{addon.name}</span>
+                          <span className="font-semibold text-[#e6e8ea]">{addon.name}</span>
                           <span className={statusTone}>{cleanStatusLabel(addon.statusLabel)}</span>
-                          <span className="text-[#8f8f8f]">· {addon.platform}</span>
+                          <span className="text-[#8b9199]">· {addon.platform}</span>
                           {addonRp.hasTradeoff && (
-                            <span className="text-[#c99b52] text-[11px]">· {addonRp.shortTag}</span>
+                            <span className="text-[#e5a93c] text-[11px]">· {addonRp.shortTag}</span>
                           )}
                         </div>
-                        <p className="text-[11px] text-[#8f8f8f] mt-0.5 truncate">{formatShortOneLineDescription(addon.description)}</p>
+                        <p className="text-[11px] text-[#8b9199] mt-0.5 truncate">{formatShortOneLineDescription(addon.description)}</p>
                       </div>
                       <a
                         href={addon.curseforgeUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={e => e.stopPropagation()}
-                        className="text-[#8f8f8f] hover:text-[#e6e6e6] p-1 rounded-[4px] shrink-0"
+                        className="text-[#8b9199] hover:text-[#e6e8ea] p-1 rounded-[4px] shrink-0"
                         title="Открыть на CurseForge"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
@@ -666,36 +666,36 @@ export function ModDetailModal({
           {analogsComparison.length > 0 && (
             <div className="space-y-2.5">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="text-sm font-semibold text-[#e6e6e6]">
+                <h3 className="text-sm font-semibold text-[#e6e8ea]">
                   Аналоги, замены и совместная работа ({analogsComparison.length})
                 </h3>
-                <span className="text-[11px] text-[#8f8f8f]">
+                <span className="text-[11px] text-[#8b9199]">
                   Сравнение по баллам и совместимости с {mod.name}
                 </span>
               </div>
               {groupInfo?.group.conflictReason && (
-                <p className="text-xs text-[#8f8f8f] bg-[#141414] border border-[#2a2a2a] rounded-[6px] px-3 py-2">
+                <p className="text-xs text-[#8b9199] bg-[#121417] border border-[#2a2e33] rounded-[6px] px-3 py-2">
                   {groupInfo.group.conflictReason}
                 </p>
               )}
-              <div className="divide-y divide-[#2a2a2a] border border-[#2a2a2a] rounded-[6px] overflow-hidden bg-[#141414]">
+              <div className="divide-y divide-[#2a2e33] border border-[#2a2e33] rounded-[6px] overflow-hidden bg-[#121417]">
                 {analogsComparison.map(entry => {
                   const alt = entry.mod;
                   const altTier = getBaseHealthTier(alt);
                   const statusTone =
                     altTier === 'red'
-                      ? 'text-[#cf6d6d]'
+                      ? 'text-[#e55353]'
                       : altTier === 'green'
-                        ? 'text-[#6abf7b]'
+                        ? 'text-[#3ddc84]'
                         : altTier === 'lime'
-                          ? 'text-[#9ab86a]'
-                          : 'text-[#c99b52]';
+                          ? 'text-[#3ddc84]'
+                          : 'text-[#e5a93c]';
                   const relColor =
                     entry.relation === 'better-replacement' || entry.relation === 'leader' || entry.relation === 'addon-synergy'
-                      ? 'text-[#6abf7b]'
+                      ? 'text-[#3ddc84]'
                       : entry.relation === 'conflict' || entry.relation === 'overlap-duplicate'
-                        ? 'text-[#cf6d6d]'
-                        : 'text-[#8f8f8f]';
+                        ? 'text-[#e55353]'
+                        : 'text-[#8b9199]';
                   const deltaSign =
                     entry.relativeDeltaPoints > 0
                       ? `+${entry.relativeDeltaPoints} б.`
@@ -709,39 +709,39 @@ export function ModDetailModal({
                     <div
                       key={alt.id}
                       onClick={() => onSelectMod(alt)}
-                      className="px-4 py-2.5 hover:bg-[#1f1f1f] cursor-pointer transition-colors flex items-start justify-between gap-3"
+                      className="px-4 py-2.5 hover:bg-[#22262b] cursor-pointer transition-colors duration-150 flex items-start justify-between gap-3"
                     >
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs">
-                          <span className="font-semibold text-[#e6e6e6]">{alt.name}</span>
+                          <span className="font-semibold text-[#e6e8ea]">{alt.name}</span>
                           {entry.isSelectedInContext && (
-                            <span className="text-[11px] font-semibold text-[#4caf6a]">в сборке</span>
+                            <span className="text-[11px] font-semibold text-[#3ddc84]">в сборке</span>
                           )}
-                          <span className="text-[#2a2a2a]" aria-hidden="true">·</span>
+                          <span className="text-[#2a2e33]" aria-hidden="true">·</span>
                           <span className={`text-[11px] font-medium ${relColor}`}>{entry.relationLabel}</span>
-                          <span className="text-[#2a2a2a]" aria-hidden="true">·</span>
+                          <span className="text-[#2a2e33]" aria-hidden="true">·</span>
                           <span className={`text-[11px] font-medium ${statusTone}`}>{cleanStatusLabel(alt.statusLabel)}</span>
-                          <span className="text-[#2a2a2a]" aria-hidden="true">·</span>
-                          <span className="text-[11px] font-mono text-[#e6e6e6] tabular-nums">
+                          <span className="text-[#2a2e33]" aria-hidden="true">·</span>
+                          <span className="text-[11px] font-mono text-[#e6e8ea] tabular-nums">
                             {entry.points} б. ({pctText})
                           </span>
                           {entry.relativeDeltaPoints !== 0 && (
                             <span
                               className={`text-[11px] font-mono font-semibold tabular-nums ${
-                                entry.relativeDeltaPoints > 0 ? 'text-[#6abf7b]' : 'text-[#8f8f8f]'
+                                entry.relativeDeltaPoints > 0 ? 'text-[#3ddc84]' : 'text-[#8b9199]'
                               }`}
                             >
                               {deltaSign} vs {mod.name}
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-[#8f8f8f] mt-1 leading-snug">
-                          <span className={entry.canUseTogether ? 'text-[#6abf7b] font-medium' : 'text-[#c99b52] font-medium'}>
+                        <p className="text-[11px] text-[#8b9199] mt-1 leading-snug">
+                          <span className={entry.canUseTogether ? 'text-[#3ddc84] font-medium' : 'text-[#e5a93c] font-medium'}>
                             {entry.canUseTogether ? 'Совместим: ' : 'Несовместно: '}
                           </span>
                           {entry.coUsageNote}
                           {altRp.hasTradeoff && (
-                            <span className="text-[#c99b52]"> · {altRp.shortTag}</span>
+                            <span className="text-[#e5a93c]"> · {altRp.shortTag}</span>
                           )}
                         </p>
                       </div>
@@ -750,7 +750,7 @@ export function ModDetailModal({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={e => e.stopPropagation()}
-                        className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-[4px] bg-[#1a1a1a] hover:bg-[#222222] border border-[#2a2a2a] text-[#8f8f8f] hover:text-[#e6e6e6] text-[11px] font-mono transition-colors"
+                        className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-[4px] bg-[#1a1d21] hover:bg-[#22262b] border border-[#2a2e33] text-[#8b9199] hover:text-[#e6e8ea] text-[11px] font-mono transition-colors duration-150"
                       >
                         CF
                         <ExternalLink className="w-3 h-3" />
@@ -764,26 +764,26 @@ export function ModDetailModal({
 
           {builtInCoveredMods.length > 0 && (
             <div className="space-y-2.5">
-              <h3 className="text-sm font-semibold text-[#e6e6e6]">
+              <h3 className="text-sm font-semibold text-[#e6e8ea]">
                 Моды, уже включённые в {mod.name} ({builtInCoveredMods.length})
               </h3>
-              <div className="divide-y divide-[#2a2a2a] border border-[#2a2a2a] rounded-[6px] overflow-hidden bg-[#141414]">
+              <div className="divide-y divide-[#2a2e33] border border-[#2a2e33] rounded-[6px] overflow-hidden bg-[#121417]">
                 {builtInCoveredMods.map(sub => (
                   <div
                     key={sub.id}
                     onClick={() => onSelectMod(sub)}
-                    className="px-4 py-2 hover:bg-[#1f1f1f] cursor-pointer flex items-center justify-between gap-3"
+                    className="px-4 py-2 hover:bg-[#22262b] cursor-pointer flex items-center justify-between gap-3"
                   >
                     <div className="min-w-0">
-                      <div className="text-xs font-medium text-[#e6e6e6]">{sub.name}</div>
-                      <div className="text-[11px] text-[#8f8f8f] truncate">{formatShortOneLineDescription(sub.description)}</div>
+                      <div className="text-xs font-medium text-[#e6e8ea]">{sub.name}</div>
+                      <div className="text-[11px] text-[#8b9199] truncate">{formatShortOneLineDescription(sub.description)}</div>
                     </div>
                     <a
                       href={sub.curseforgeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={e => e.stopPropagation()}
-                      className="shrink-0 text-[#8f8f8f] hover:text-[#e6e6e6] p-1"
+                      className="shrink-0 text-[#8b9199] hover:text-[#e6e8ea] p-1"
                       title="CurseForge"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
